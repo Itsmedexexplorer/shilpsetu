@@ -187,6 +187,7 @@ const initialSession: Session = {
   role: null,
   profile: emptyProfile,
   draft: emptyDraft,
+  accountId: null,
 };
 
 const initialMarket: Market = { products: [], inquiries: [] };
