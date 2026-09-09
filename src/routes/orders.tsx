@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { BottomNav } from "@/components/shilp/BottomNav";
 import { Empty, Motif } from "@/components/shilp/ui";
+import { useT } from "@/lib/i18n";
 import { useShilp, type Inquiry } from "@/lib/shilp-store";
 
 export const Route = createFileRoute("/orders")({
@@ -20,13 +21,14 @@ export const Route = createFileRoute("/orders")({
 });
 
 const tabs: { key: Inquiry["status"]; label: string }[] = [
-  { key: "new", label: "New" },
-  { key: "contacted", label: "Contacted" },
-  { key: "completed", label: "Completed" },
+  { key: "new", label: "orders.new" },
+  { key: "contacted", label: "orders.contacted" },
+  { key: "completed", label: "orders.completed" },
 ];
 
 function OrdersScreen() {
   const { inquiries, setInquiryStatus } = useShilp();
+  const t = useT();
   const [tab, setTab] = useState<Inquiry["status"]>("new");
   const list = inquiries.filter((i) => i.status === tab);
 
@@ -34,27 +36,27 @@ function OrdersScreen() {
     <div className="flex min-h-full flex-1 flex-col bg-ivory">
       <header className="px-5 pt-8">
         <Motif className="mb-4" />
-        <h1 className="text-[2.2rem] font-extrabold">Inquiries</h1>
+        <h1 className="text-[2.2rem] font-extrabold">{t("orders.title")}</h1>
         <div className="mt-5 flex gap-2">
-          {tabs.map((t) => (
+          {tabs.map((tb) => (
             <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
+              key={tb.key}
+              onClick={() => setTab(tb.key)}
               className={`press rounded-full px-4 py-2 text-sm font-bold ${
-                tab === t.key ? "bg-forest text-ivory" : "bg-sand text-charcoal/70"
+                tab === tb.key ? "bg-forest text-ivory" : "bg-sand text-charcoal/70"
               }`}
             >
-              {t.label}
+              {t(tb.label)}
             </button>
           ))}
         </div>
       </header>
 
-      <div className="mt-5 space-y-3 px-5 pb-8">
+      <div className="mt-5 space-y-3 px-5 pb-32">
         {list.length === 0 ? (
           <Empty
-            title="Nothing in this list"
-            body="When a buyer sends an inquiry from your listing, it appears here."
+            title={t("orders.emptyTitle")}
+            body={t("orders.emptyBody")}
           />
         ) : (
           list.map((i) => (
@@ -67,7 +69,9 @@ function OrdersScreen() {
                 <span className="shrink-0 text-xs font-bold opacity-55">{i.date}</span>
               </div>
               <div className="mt-3 flex flex-wrap gap-2 text-xs font-bold">
-                <span className="rounded-full bg-sand px-3 py-1">Qty {i.quantity}</span>
+                <span className="rounded-full bg-sand px-3 py-1">
+                  {t("orders.qty")} {i.quantity}
+                </span>
                 <span className="rounded-full bg-sand px-3 py-1">{i.contact}</span>
               </div>
               {i.message ? (
@@ -79,7 +83,7 @@ function OrdersScreen() {
                     onClick={() => setInquiryStatus(i.id, "contacted")}
                     className="press rounded-xl bg-forest px-4 py-2 text-sm font-bold text-ivory"
                   >
-                    Mark contacted
+                    {t("orders.markContacted")}
                   </button>
                 ) : null}
                 {i.status !== "completed" ? (
@@ -87,7 +91,7 @@ function OrdersScreen() {
                     onClick={() => setInquiryStatus(i.id, "completed")}
                     className="press rounded-xl border-2 border-charcoal/15 px-4 py-2 text-sm font-bold"
                   >
-                    Complete
+                    {t("orders.complete")}
                   </button>
                 ) : null}
               </div>

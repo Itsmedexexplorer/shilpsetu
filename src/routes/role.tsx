@@ -57,8 +57,8 @@ function RoleScreen() {
                 <Icon size={24} />
               </span>
               <span className="min-w-0">
-                <span className="block text-xl font-extrabold">{title}</span>
-                <span className="block text-sm opacity-65">{sub}</span>
+                <span className="block text-xl font-extrabold">{t(`role.${k}`)}</span>
+                <span className="block text-sm opacity-65">{t(`role.${k}Sub`)}</span>
               </span>
             </button>
           );
@@ -76,7 +76,7 @@ function RoleScreen() {
           className={!role ? "opacity-40" : ""}
           onClick={() => navigate({ to: "/home" })}
         >
-          Continue
+          {t("common.continue")}
         </Btn>
       </div>
     </Screen>

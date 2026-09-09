@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { BookOpen, Camera, IndianRupee, LayoutGrid, Plus } from "lucide-react";
 import { BottomNav } from "@/components/shilp/BottomNav";
 import { Empty, Motif, StatusChip } from "@/components/shilp/ui";
+import { useT } from "@/lib/i18n";
 import { rupees, useShilp } from "@/lib/shilp-store";
 
 export const Route = createFileRoute("/home")({
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/home")({
 
 function HomeScreen() {
   const { artisanName, products, resetDraft } = useShilp();
+  const t = useT();
   const navigate = useNavigate();
 
   const startNew = () => {
@@ -37,9 +39,9 @@ function HomeScreen() {
       <header className="craft-texture bg-forest-deep px-5 pt-8 pb-10 text-ivory">
         <Motif className="mb-5" />
         <h1 className="text-[2.2rem] leading-tight font-extrabold">
-          Namaste, {artisanName} ji
+          {t("home.greet")}, {artisanName} ji
         </h1>
-        <p className="mt-2 text-ivory/70">Turn your craft into opportunities today.</p>
+        <p className="mt-2 text-ivory/70">{t("home.sub")}</p>
       </header>
 
       <div className="-mt-6 px-5">
@@ -54,10 +56,10 @@ function HomeScreen() {
             </span>
             <span className="min-w-0">
               <span className="block text-2xl leading-tight font-extrabold">
-                Add New Product
+                {t("home.add")}
               </span>
               <span className="block text-sm text-white/80">
-                Photo + your voice. About 60 seconds.
+                {t("home.addSub")}
               </span>
             </span>
           </span>
@@ -65,24 +67,24 @@ function HomeScreen() {
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-3 px-5">
-        <Tile to="/catalog" Icon={LayoutGrid} label="My Catalog" tone="forest" />
-        <Tile to="/price" Icon={IndianRupee} label="Price Advisor" tone="sand" />
-        <Tile to="/capture" Icon={Camera} label="Quick Capture" tone="sand" />
-        <Tile to="/profile" Icon={BookOpen} label="Learn & Support" tone="forest" />
+        <Tile to="/catalog" Icon={LayoutGrid} label={t("home.catalog")} tone="forest" />
+        <Tile to="/price" Icon={IndianRupee} label={t("home.price")} tone="sand" />
+        <Tile to="/capture" Icon={Camera} label={t("home.capture")} tone="sand" />
+        <Tile to="/profile" Icon={BookOpen} label={t("home.learn")} tone="forest" />
       </div>
 
-      <section className="mt-8 px-5 pb-8">
+      <section className="mt-8 px-5 pb-32">
         <div className="mb-3 flex items-end justify-between">
-          <h2 className="text-xl font-extrabold">Your recent products</h2>
+          <h2 className="text-xl font-extrabold">{t("home.recent")}</h2>
           <Link to="/catalog" className="text-sm font-bold text-terracotta">
-            See all
+            {t("common.seeAll")}
           </Link>
         </div>
 
         {products.length === 0 ? (
           <Empty
-            title="Nothing here yet"
-            body="Your first listing takes about a minute. Tap Add New Product to begin."
+            title={t("home.emptyTitle")}
+            body={t("home.emptyBody")}
           />
         ) : (
           <div className="space-y-3">

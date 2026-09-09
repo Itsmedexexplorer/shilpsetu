@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { BottomNav } from "@/components/shilp/BottomNav";
 import { Empty, Motif, StatusChip } from "@/components/shilp/ui";
+import { useT } from "@/lib/i18n";
 import { rupees, useShilp } from "@/lib/shilp-store";
 
 export const Route = createFileRoute("/catalog")({
@@ -21,9 +22,15 @@ export const Route = createFileRoute("/catalog")({
 });
 
 const filters = ["All", "Published", "Drafts"] as const;
+const filterKey = {
+  All: "catalog.all",
+  Published: "catalog.published",
+  Drafts: "catalog.drafts",
+} as const;
 
 function CatalogScreen() {
   const { products, resetDraft } = useShilp();
+  const t = useT();
   const navigate = useNavigate();
   const [filter, setFilter] = useState<(typeof filters)[number]>("All");
 
@@ -39,9 +46,10 @@ function CatalogScreen() {
     <div className="relative flex min-h-full flex-1 flex-col bg-ivory">
       <header className="px-5 pt-8">
         <Motif className="mb-4" />
-        <h1 className="text-[2.2rem] font-extrabold">My Catalog</h1>
+        <h1 className="text-[2.2rem] font-extrabold">{t("catalog.title")}</h1>
         <p className="mt-1 text-sm opacity-65">
-          {products.length} {products.length === 1 ? "product" : "products"}
+          {products.length}{" "}
+          {products.length === 1 ? t("catalog.product") : t("catalog.products")}
         </p>
 
         <div className="mt-5 flex gap-2">
@@ -53,17 +61,17 @@ function CatalogScreen() {
                 filter === f ? "bg-forest text-ivory" : "bg-sand text-charcoal/70"
               }`}
             >
-              {f}
+              {t(filterKey[f])}
             </button>
           ))}
         </div>
       </header>
 
-      <div className="mt-5 space-y-4 px-5 pb-28">
+      <div className="mt-5 space-y-4 px-5 pb-36">
         {list.length === 0 ? (
           <Empty
-            title="No products here yet"
-            body="Add your first craft — a photo and a short voice note is all it takes."
+            title={t("catalog.emptyTitle")}
+            body={t("catalog.emptyBody")}
           />
         ) : (
           list.map((p, i) => (
@@ -101,9 +109,9 @@ function CatalogScreen() {
           resetDraft();
           navigate({ to: "/capture" });
         }}
-        className="press fixed right-6 bottom-24 z-30 flex h-14 items-center gap-2 rounded-full bg-terracotta px-6 font-extrabold text-white shadow-[0_16px_36px_-12px_rgba(0,0,0,.6)] lg:absolute"
+        className="press fixed right-6 bottom-28 z-30 flex h-14 items-center gap-2 rounded-full bg-terracotta px-6 font-extrabold text-white shadow-[0_16px_36px_-12px_rgba(0,0,0,.6)] lg:absolute"
       >
-        <Plus size={20} /> Add New
+        <Plus size={20} /> {t("catalog.addNew")}
       </button>
 
       <BottomNav />
