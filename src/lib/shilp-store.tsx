@@ -289,6 +289,9 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
 
         setMarket(parsedMarket);
       }
+
+      const a = localStorage.getItem(ACCOUNTS_KEY);
+      if (a) setAccounts(JSON.parse(a) as Account[]);
     } catch {
       /* ignore corrupted state */
     }
