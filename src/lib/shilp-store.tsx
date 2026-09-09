@@ -58,6 +58,13 @@ export type Product = {
   seller: Profile;
 };
 
+export type Offer = {
+  by: "buyer" | "artisan";
+  price: string;
+  note: string;
+  at: number;
+};
+
 export type Inquiry = {
   id: string;
   buyer: string;
@@ -72,7 +79,12 @@ export type Inquiry = {
   quantity: string;
   message: string;
   date: string;
-  status: "new" | "contacted" | "completed";
+  status: "new" | "negotiating" | "contacted" | "completed" | "accepted";
+  /** Latest offer on the table, per piece. */
+  offerPrice: string;
+  /** Final price both sides settled on. */
+  agreedPrice: string;
+  offers: Offer[];
 };
 
 
@@ -148,10 +160,14 @@ type Ctx = Session &
         | "productId"
         | "quantity"
         | "message"
-      >,
-    ) => void;
+      > & { offerPrice?: string },
+    ) => string;
 
     setInquiryStatus: (id: string, status: Inquiry["status"]) => void;
+    /** Put a new price on the table from either side. */
+    addOffer: (id: string, offer: Omit<Offer, "at">) => void;
+    /** Both sides settle on a final price. */
+    acceptOffer: (id: string, price: string) => void;
     signOut: () => void;
   };
 
@@ -177,7 +193,17 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
       }
 
       const m = localStorage.getItem(MARKET_KEY);
-      if (m) setMarket({ ...initialMarket, ...(JSON.parse(m) as Market) });
+      if (m) {
+        const parsedMarket = { ...initialMarket, ...(JSON.parse(m) as Market) };
+        // Older saved inquiries pre-date the bargain coach.
+        parsedMarket.inquiries = (parsedMarket.inquiries ?? []).map((i) => ({
+          ...i,
+          offerPrice: i.offerPrice ?? "",
+          agreedPrice: i.agreedPrice ?? "",
+          offers: Array.isArray(i.offers) ? i.offers : [],
+        }));
+        setMarket(parsedMarket);
+      }
     } catch {
       /* ignore corrupted state */
     }
@@ -246,9 +272,11 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
         setMarket((m) => ({ ...m, products: [product, ...m.products] }));
         return product;
       },
-      addInquiry: (i) =>
+      addInquiry: (i) => {
+        const id = `i${Date.now()}`;
         setMarket((m) => {
           const product = m.products.find((p) => p.id === i.productId);
+          const offerPrice = (i.offerPrice ?? "").replace(/[^\d]/g, "");
           return {
             ...m,
             inquiries: [
@@ -258,18 +286,31 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
                 productTitle: product?.title ?? "Product",
                 productImage: product?.image ?? "",
                 productPrice: product?.price ?? "0",
-                id: `i${Date.now()}`,
+                id,
                 date: new Date().toLocaleDateString("en-IN", {
                   day: "2-digit",
                   month: "short",
                 }),
-                status: "new",
-
+                status: offerPrice ? "negotiating" : "new",
+                offerPrice,
+                agreedPrice: "",
+                offers: offerPrice
+                  ? [
+                      {
+                        by: "buyer" as const,
+                        price: offerPrice,
+                        note: i.message,
+                        at: Date.now(),
+                      },
+                    ]
+                  : [],
               },
               ...m.inquiries,
             ],
           };
-        }),
+        });
+        return id;
+      },
       signOut: () => {
         try {
           localStorage.removeItem(SESSION_KEY);
@@ -282,6 +323,29 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
         setMarket((m) => ({
           ...m,
           inquiries: m.inquiries.map((x) => (x.id === id ? { ...x, status } : x)),
+        })),
+      addOffer: (id, offer) =>
+        setMarket((m) => ({
+          ...m,
+          inquiries: m.inquiries.map((x) =>
+            x.id === id
+              ? {
+                  ...x,
+                  offerPrice: offer.price,
+                  status: x.status === "accepted" ? x.status : "negotiating",
+                  offers: [...(x.offers ?? []), { ...offer, at: Date.now() }],
+                }
+              : x,
+          ),
+        })),
+      acceptOffer: (id, price) =>
+        setMarket((m) => ({
+          ...m,
+          inquiries: m.inquiries.map((x) =>
+            x.id === id
+              ? { ...x, agreedPrice: price, offerPrice: price, status: "accepted" }
+              : x,
+          ),
         })),
     };
   }, [session, market, ready]);

@@ -161,3 +161,162 @@ Return JSON only with keys: title (max 8 words, names the real object), descript
       craft: parsed.craft || "Handmade Craft",
     };
   });
+
+export type CoachResult = {
+  counterPrice: string;
+  floorPrice: string;
+  verdict: string;
+  reasons: string[];
+  replyText: string;
+};
+
+/**
+ * AI Bargain Coach. Given the craft, the artisan's own costs and the buyer's
+ * offer, it suggests a fair counter-price with plain-language reasons.
+ */
+export const negotiate = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        title: z.string().default(""),
+        craft: z.string().default(""),
+        material: z.string().default(""),
+        listedPrice: z.string().default("0"),
+        buyerOffer: z.string().default("0"),
+        quantity: z.string().default("1"),
+        note: z.string().default(""),
+        costMaterial: z.string().default(""),
+        costLabour: z.string().default(""),
+        costOther: z.string().default(""),
+        days: z.string().default(""),
+        language: z.string().optional(),
+        side: z.enum(["artisan", "buyer"]).default("artisan"),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data }): Promise<CoachResult> => {
+    const key = process.env["LOVABLE_API_KEY"];
+    if (!key) throw new Error("Missing LOVABLE_API_KEY");
+
+    const langName = LANG_NAME[data.language ?? "en"] ?? "English";
+    const forArtisan = data.side === "artisan";
+
+    const prompt = `You are a fair-price negotiation coach for Indian handmade crafts. All money is Indian Rupees.
+
+Product: ${data.title || "handmade craft"}
+Craft: ${data.craft || "handmade"} | Material: ${data.material || "unknown"}
+Listed price: ${data.listedPrice} for 1 piece
+Buyer wants quantity: ${data.quantity}
+Buyer's offer (per piece): ${data.buyerOffer}
+Artisan's own numbers: materials ${data.costMaterial || "not given"}, labour ${data.costLabour || "not given"}, other ${data.costOther || "not given"}, days of work ${data.days || "not given"}.
+Extra note from the person: "${data.note || "(none)"}"
+
+Advise the ${forArtisan ? "ARTISAN, who received this offer" : "BUYER, who is about to send this offer"}.
+Never advise a price below the artisan's real cost of materials plus labour. A small bulk discount is reasonable when quantity is more than 3.
+
+Return:
+- counterPrice: a single realistic per-piece number, digits only, no currency symbol.
+- floorPrice: the lowest per-piece number that still respects the artisan's cost, digits only.
+- verdict: one short sentence saying whether the offer is fair, low, or generous.
+- reasons: exactly 3 very short plain-language reasons, no jargon.
+- replyText: a warm, respectful 2-sentence message the ${forArtisan ? "artisan can send to the buyer" : "buyer can send to the artisan"}.
+
+Write verdict, reasons and replyText in ${langName}. Write numbers as plain digits.`;
+
+    const res = await fetch(`${GATEWAY}/responses`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Lovable-API-Key": key,
+        "X-Lovable-AIG-SDK": "fetch",
+      },
+      body: JSON.stringify({
+        model: "openai/gpt-6-astra",
+        input: prompt,
+        stream: true,
+        reasoning: { effort: "low" },
+        text: {
+          format: {
+            type: "json_schema",
+            name: "coach",
+            strict: true,
+            schema: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                counterPrice: { type: "string" },
+                floorPrice: { type: "string" },
+                verdict: { type: "string" },
+                reasons: { type: "array", items: { type: "string" } },
+                replyText: { type: "string" },
+              },
+              required: [
+                "counterPrice",
+                "floorPrice",
+                "verdict",
+                "reasons",
+                "replyText",
+              ],
+            },
+          },
+        },
+      }),
+    });
+
+    if (!res.ok || !res.body) {
+      const detail = await res.text().catch(() => "");
+      throw new Error(`Coach failed (${res.status}): ${detail.slice(0, 300)}`);
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let text = "";
+    let done = false;
+    while (!done) {
+      const chunk = await reader.read();
+      done = chunk.done;
+      if (chunk.value) buffer += decoder.decode(chunk.value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith("data:")) continue;
+        const payload = trimmed.slice(5).trim();
+        if (!payload || payload === "[DONE]") continue;
+        try {
+          const evt = JSON.parse(payload) as {
+            type?: string;
+            delta?: string;
+            response?: { output_text?: string };
+          };
+          if (evt.type === "response.output_text.delta" && evt.delta) {
+            text += evt.delta;
+          } else if (evt.type === "response.completed" && evt.response?.output_text) {
+            if (!text) text = evt.response.output_text;
+          }
+        } catch {
+          /* partial event, ignore */
+        }
+      }
+    }
+
+    const raw = text
+      .replace(/^\s*```(?:json)?/i, "")
+      .replace(/```\s*$/, "")
+      .trim();
+    if (!raw) throw new Error("The coach had nothing to say. Please try again.");
+
+    const parsed = JSON.parse(raw) as Partial<CoachResult>;
+    const digits = (v: unknown, fallback: string) => {
+      const n = String(v ?? "").replace(/[^\d]/g, "");
+      return n || fallback;
+    };
+    return {
+      counterPrice: digits(parsed.counterPrice, data.listedPrice || "0"),
+      floorPrice: digits(parsed.floorPrice, data.buyerOffer || "0"),
+      verdict: parsed.verdict ?? "",
+      reasons: Array.isArray(parsed.reasons) ? parsed.reasons.slice(0, 3) : [],
+      replyText: parsed.replyText ?? "",
+    };
+  });
