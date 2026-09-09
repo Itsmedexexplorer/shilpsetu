@@ -2,7 +2,6 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Copy, QrCode, Share2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import artisanImg from "@/assets/artisan-hero.jpg";
 import demoAfter from "@/assets/vase-after.jpg";
 import { Btn } from "@/components/shilp/ui";
 import { prettyUrl, productUrl, qrUrl } from "@/lib/share";
@@ -170,12 +169,18 @@ function BuyerView() {
         ) : null}
 
         <div className="lift mt-8 flex gap-4 rounded-3xl bg-forest p-5 text-ivory">
-          <img
-            src={artisanImg}
-            alt="The artisan"
-            loading="lazy"
-            className="h-20 w-20 shrink-0 rounded-2xl object-cover"
-          />
+          {p.seller?.avatar ? (
+            <img
+              src={p.seller.avatar}
+              alt=""
+              loading="lazy"
+              className="h-20 w-20 shrink-0 rounded-2xl object-cover"
+            />
+          ) : (
+            <span className="font-display grid h-20 w-20 shrink-0 place-items-center rounded-2xl bg-ivory/15 text-3xl font-extrabold">
+              {(p.seller?.name || "S").charAt(0).toUpperCase()}
+            </span>
+          )}
           <div className="min-w-0">
             <p className="text-xs tracking-[0.15em] uppercase opacity-60">Made by</p>
             <p className="text-lg font-extrabold">
@@ -192,6 +197,7 @@ function BuyerView() {
             </p>
           </div>
         </div>
+
 
         <p className="mt-6 text-xs opacity-50">
           Ships across India. Bulk and institutional orders welcome.
