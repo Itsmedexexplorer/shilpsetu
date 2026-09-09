@@ -315,7 +315,12 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
                 status: offerPrice ? "negotiating" : "new",
                 offerPrice,
                 agreedPrice: "",
+                kind: i.kind ?? "single",
+                orgName: i.orgName ?? "",
+                deadline: i.deadline ?? "",
+                deliverTo: i.deliverTo ?? "",
                 offers: offerPrice
+
                   ? [
                       {
                         by: "buyer" as const,
