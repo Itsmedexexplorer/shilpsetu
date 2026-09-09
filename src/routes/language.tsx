@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Check } from "lucide-react";
 import { Btn, Screen, Title, TopBar } from "@/components/shilp/ui";
+import { useT } from "@/lib/i18n";
 import { LANGUAGES, useShilp, type LangCode } from "@/lib/shilp-store";
 
 export const Route = createFileRoute("/language")({
@@ -20,16 +21,15 @@ export const Route = createFileRoute("/language")({
 
 function LanguageScreen() {
   const { language, set } = useShilp();
+  const t = useT();
   const navigate = useNavigate();
 
   const pick = (code: LangCode) => set({ language: code });
 
   return (
     <Screen>
-      <TopBar title="Step 1 of 3" />
-      <Title sub="Choose the language you are comfortable with.">
-        Apni bhasha chuniye
-      </Title>
+      <TopBar title={t("lang.step")} />
+      <Title sub={t("lang.sub")}>{t("lang.title")}</Title>
 
       <div className="space-y-3 px-5">
         {LANGUAGES.map((l, i) => {
@@ -65,7 +65,7 @@ function LanguageScreen() {
           onClick={() => navigate({ to: "/role" })}
           className={!language ? "opacity-40" : ""}
         >
-          Continue
+          {t("common.continue")}
         </Btn>
       </div>
     </Screen>
