@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Building2, ShoppingBag, Sparkles } from "lucide-react";
 import { Btn, Screen, Title, TopBar } from "@/components/shilp/ui";
+import { useT } from "@/lib/i18n";
 import { useShilp, type Role } from "@/lib/shilp-store";
 
 export const Route = createFileRoute("/role")({
@@ -18,23 +19,24 @@ export const Route = createFileRoute("/role")({
   component: RoleScreen,
 });
 
-const roles: { id: Role; title: string; sub: string; Icon: typeof Sparkles }[] = [
-  { id: "artisan", title: "Artisan", sub: "I create handmade products", Icon: Sparkles },
-  { id: "buyer", title: "Buyer", sub: "I want to explore products", Icon: ShoppingBag },
-  { id: "org", title: "Organization", sub: "I work with artisans", Icon: Building2 },
+const roles: { id: Role; k: string; Icon: typeof Sparkles }[] = [
+  { id: "artisan", k: "artisan", Icon: Sparkles },
+  { id: "buyer", k: "buyer", Icon: ShoppingBag },
+  { id: "org", k: "org", Icon: Building2 },
 ];
 
 function RoleScreen() {
   const { role, set } = useShilp();
+  const t = useT();
   const navigate = useNavigate();
 
   return (
     <Screen>
-      <TopBar title="Step 2 of 3" />
-      <Title sub="Ye tay karta hai ki aapko kya dikhega.">Aap kaun hain?</Title>
+      <TopBar title={t("role.step")} />
+      <Title sub={t("role.sub")}>{t("role.title")}</Title>
 
       <div className="space-y-4 px-5">
-        {roles.map(({ id, title, sub, Icon }, i) => {
+        {roles.map(({ id, k, Icon }, i) => {
           const active = role === id;
           return (
             <button
@@ -55,8 +57,8 @@ function RoleScreen() {
                 <Icon size={24} />
               </span>
               <span className="min-w-0">
-                <span className="block text-xl font-extrabold">{title}</span>
-                <span className="block text-sm opacity-65">{sub}</span>
+                <span className="block text-xl font-extrabold">{t(`role.${k}`)}</span>
+                <span className="block text-sm opacity-65">{t(`role.${k}Sub`)}</span>
               </span>
             </button>
           );
@@ -74,7 +76,7 @@ function RoleScreen() {
           className={!role ? "opacity-40" : ""}
           onClick={() => navigate({ to: "/home" })}
         >
-          Continue
+          {t("common.continue")}
         </Btn>
       </div>
     </Screen>

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export function PhoneCanvas({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-ivory lg:flex lg:items-center lg:justify-center lg:gap-16 lg:bg-forest-deep lg:px-16 lg:py-14">
+    <div className="min-h-[100dvh] bg-ivory lg:flex lg:items-center lg:justify-center lg:gap-16 lg:bg-forest-deep lg:px-16 lg:py-14">
       <aside className="hidden max-w-xl lg:block">
         <div className="motif-band mb-8 h-1.5 w-28 rounded-full" />
         <h1 className="font-display text-[4rem] leading-[0.95] font-extrabold text-ivory">
@@ -30,8 +30,8 @@ export function PhoneCanvas({ children }: { children: ReactNode }) {
       </aside>
 
       <div className="lg:rounded-[3rem] lg:border lg:border-white/15 lg:bg-black/40 lg:p-3 lg:shadow-[0_50px_120px_-40px_rgba(0,0,0,0.9)]">
-        <div className="min-h-screen w-full overflow-hidden bg-ivory lg:h-[860px] lg:max-h-[86vh] lg:min-h-0 lg:w-[400px] lg:rounded-[2.4rem]">
-          <div className="flex min-h-screen flex-col lg:h-full lg:min-h-0 lg:overflow-y-auto">
+        <div className="relative min-h-[100dvh] w-full overflow-hidden bg-ivory lg:h-[860px] lg:max-h-[86vh] lg:min-h-0 lg:w-[400px] lg:rounded-[2.4rem]">
+          <div className="flex min-h-[100dvh] flex-col lg:h-full lg:min-h-0 lg:overflow-y-auto">
             {children}
           </div>
         </div>

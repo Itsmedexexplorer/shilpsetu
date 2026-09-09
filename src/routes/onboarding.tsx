@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Camera, IndianRupee, Store } from "lucide-react";
 import heroImg from "@/assets/artisan-hero.jpg";
 import { Btn, Motif } from "@/components/shilp/ui";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -23,13 +24,14 @@ export const Route = createFileRoute("/onboarding")({
 });
 
 const benefits = [
-  { Icon: Camera, t: "AI-powered catalog", s: "A photo and your voice is enough." },
-  { Icon: IndianRupee, t: "Fair price suggestions", s: "Costs, time and skill counted." },
-  { Icon: Store, t: "Reach beyond your market", s: "Share with buyers anywhere." },
+  { Icon: Camera, k: "b1" },
+  { Icon: IndianRupee, k: "b2" },
+  { Icon: Store, k: "b3" },
 ];
 
 function Onboarding() {
   const navigate = useNavigate();
+  const t = useT();
   return (
     <div className="flex min-h-full flex-1 flex-col bg-ivory">
       <div className="relative h-[38vh] min-h-[240px] overflow-hidden bg-forest-deep">
@@ -46,13 +48,13 @@ function Onboarding() {
       <div className="animate-rise -mt-10 flex-1 rounded-t-[2rem] bg-ivory px-6 pt-8">
         <Motif className="mb-5" />
         <h1 className="text-[2.4rem] leading-[1.02] font-extrabold text-balance">
-          Turn Your Craft Into Opportunities
+          {t("onboarding.title")}
         </h1>
 
         <div className="mt-8 space-y-5">
-          {benefits.map(({ Icon, t, s }, i) => (
+          {benefits.map(({ Icon, k }, i) => (
             <div
-              key={t}
+              key={k}
               className="flex items-start gap-4"
               style={{ animation: `rise-in .5s ${0.1 * i}s both` }}
             >
@@ -60,8 +62,8 @@ function Onboarding() {
                 <Icon size={22} />
               </div>
               <div className="min-w-0">
-                <p className="text-lg font-extrabold">{t}</p>
-                <p className="text-sm opacity-65">{s}</p>
+                <p className="text-lg font-extrabold">{t(`onboarding.${k}`)}</p>
+                <p className="text-sm opacity-65">{t(`onboarding.${k}s`)}</p>
               </div>
             </div>
           ))}
@@ -69,9 +71,9 @@ function Onboarding() {
       </div>
 
       <div className="space-y-2 px-6 pt-6 pb-8">
-        <Btn onClick={() => navigate({ to: "/language" })}>Continue</Btn>
+        <Btn onClick={() => navigate({ to: "/language" })}>{t("common.continue")}</Btn>
         <Link to="/language" className="block py-2 text-center">
-          <span className="text-sm font-semibold opacity-55">Skip</span>
+          <span className="text-sm font-semibold opacity-55">{t("common.skip")}</span>
         </Link>
       </div>
     </div>

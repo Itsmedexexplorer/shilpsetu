@@ -17,6 +17,7 @@ import { Route as EditRouteImport } from './routes/edit'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as LanguageRouteImport } from './routes/language'
 import { Route as ListingRouteImport } from './routes/listing'
+import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as PriceRouteImport } from './routes/price'
@@ -68,6 +69,11 @@ const LanguageRoute = LanguageRouteImport.update({
 const ListingRoute = ListingRouteImport.update({
   id: '/listing',
   path: '/listing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LogoutRoute = LogoutRouteImport.update({
+  id: '/logout',
+  path: '/logout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -140,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/language': typeof LanguageRoute
   '/listing': typeof ListingRoute
+  '/logout': typeof LogoutRoute
   '/onboarding': typeof OnboardingRoute
   '/orders': typeof OrdersRoute
   '/price': typeof PriceRoute
@@ -162,6 +169,7 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/language': typeof LanguageRoute
   '/listing': typeof ListingRoute
+  '/logout': typeof LogoutRoute
   '/onboarding': typeof OnboardingRoute
   '/orders': typeof OrdersRoute
   '/price': typeof PriceRoute
@@ -185,6 +193,7 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/language': typeof LanguageRoute
   '/listing': typeof ListingRoute
+  '/logout': typeof LogoutRoute
   '/onboarding': typeof OnboardingRoute
   '/orders': typeof OrdersRoute
   '/price': typeof PriceRoute
@@ -209,6 +218,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/language'
     | '/listing'
+    | '/logout'
     | '/onboarding'
     | '/orders'
     | '/price'
@@ -231,6 +241,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/language'
     | '/listing'
+    | '/logout'
     | '/onboarding'
     | '/orders'
     | '/price'
@@ -253,6 +264,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/language'
     | '/listing'
+    | '/logout'
     | '/onboarding'
     | '/orders'
     | '/price'
@@ -276,6 +288,7 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   LanguageRoute: typeof LanguageRoute
   ListingRoute: typeof ListingRoute
+  LogoutRoute: typeof LogoutRoute
   OnboardingRoute: typeof OnboardingRoute
   OrdersRoute: typeof OrdersRoute
   PriceRoute: typeof PriceRoute
@@ -346,6 +359,13 @@ declare module '@tanstack/react-router' {
       path: '/listing'
       fullPath: '/listing'
       preLoaderRoute: typeof ListingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/logout': {
+      id: '/logout'
+      path: '/logout'
+      fullPath: '/logout'
+      preLoaderRoute: typeof LogoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -444,6 +464,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   LanguageRoute: LanguageRoute,
   ListingRoute: ListingRoute,
+  LogoutRoute: LogoutRoute,
   OnboardingRoute: OnboardingRoute,
   OrdersRoute: OrdersRoute,
   PriceRoute: PriceRoute,

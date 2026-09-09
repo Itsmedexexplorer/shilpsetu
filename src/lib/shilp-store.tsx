@@ -99,6 +99,7 @@ type Ctx = State & {
   publishDraft: (status?: Product["status"]) => Product;
   addInquiry: (i: Omit<Inquiry, "id" | "date" | "status">) => void;
   setInquiryStatus: (id: string, status: Inquiry["status"]) => void;
+  signOut: () => void;
 };
 
 const StoreContext = createContext<Ctx | null>(null);
@@ -170,6 +171,14 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
             ...s.inquiries,
           ],
         })),
+      signOut: () => {
+        try {
+          localStorage.removeItem(KEY);
+        } catch {
+          /* storage unavailable */
+        }
+        setState(initial);
+      },
       setInquiryStatus: (id, status) =>
         setState((s) => ({
           ...s,
