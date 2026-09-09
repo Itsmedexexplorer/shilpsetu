@@ -249,3 +249,47 @@
     transform: scale(0.97);
   }
 }
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes zoom-soft {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@utility animate-float {
+  animation: float-soft 4.5s ease-in-out infinite;
+}
+@utility animate-zoom {
+  animation: zoom-soft 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@utility lift {
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s ease;
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 34px -20px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
