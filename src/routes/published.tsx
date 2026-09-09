@@ -7,7 +7,7 @@ import { Btn, Screen } from "@/components/shilp/ui";
 import { rupees, useShilp } from "@/lib/shilp-store";
 
 export const Route = createFileRoute("/published")({
-  validateSearch: (s: Record<string, unknown>) => ({ id: String(s.id ?? "") }),
+  validateSearch: (s: Record<string, unknown>) => ({ id: String(s["id"] ?? "") }),
   head: () => ({
     meta: [
       { title: "Your product is live — SHILPSETU AI" },

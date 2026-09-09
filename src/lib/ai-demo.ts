@@ -51,7 +51,8 @@ export function generateListing(transcript: string): GeneratedListing {
 
   const isVase = /फूलदान|vase|pot|मटका/i.test(transcript);
   const noun = isVase ? "Flower Vase" : craft === "Weaving" ? "Basket" : "Craft Piece";
-  const title = `Handcrafted ${material.split(" ")[0]} ${noun}`;
+  const matWord = material.split(" ")[0] ?? "Handmade";
+  const title = `Handcrafted ${matWord} ${noun}`;
 
   const description = [
     `A ${noun.toLowerCase()} shaped entirely by hand using ${material.toLowerCase()}.`,
@@ -60,7 +61,7 @@ export function generateListing(transcript: string): GeneratedListing {
   ].join(" ");
 
   const keywords = [
-    material.split(" ")[0],
+    matWord,
     craft,
     "Handmade",
     "Eco-friendly",
