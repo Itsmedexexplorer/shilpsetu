@@ -1,9 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Screen } from "@/components/shilp/ui";
+import { analyzeProduct } from "@/lib/ai.functions";
 import { generateListing, PIPELINE } from "@/lib/ai-demo";
 import { useShilp } from "@/lib/shilp-store";
+
 
 export const Route = createFileRoute("/processing")({
   head: () => ({
