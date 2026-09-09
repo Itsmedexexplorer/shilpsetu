@@ -10,33 +10,206 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CaptureRouteImport } from './routes/capture'
+import { Route as CostsRouteImport } from './routes/costs'
+import { Route as EditRouteImport } from './routes/edit'
+import { Route as HomeRouteImport } from './routes/home'
+import { Route as LanguageRouteImport } from './routes/language'
+import { Route as ListingRouteImport } from './routes/listing'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PriceRouteImport } from './routes/price'
+import { Route as ProcessingRouteImport } from './routes/processing'
+import { Route as ReviewRouteImport } from './routes/review'
+import { Route as RoleRouteImport } from './routes/role'
+import { Route as StudioRouteImport } from './routes/studio'
+import { Route as VoiceRouteImport } from './routes/voice'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CaptureRoute = CaptureRouteImport.update({
+  id: '/capture',
+  path: '/capture',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CostsRoute = CostsRouteImport.update({
+  id: '/costs',
+  path: '/costs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditRoute = EditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LanguageRoute = LanguageRouteImport.update({
+  id: '/language',
+  path: '/language',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListingRoute = ListingRouteImport.update({
+  id: '/listing',
+  path: '/listing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PriceRoute = PriceRouteImport.update({
+  id: '/price',
+  path: '/price',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProcessingRoute = ProcessingRouteImport.update({
+  id: '/processing',
+  path: '/processing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReviewRoute = ReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoleRoute = RoleRouteImport.update({
+  id: '/role',
+  path: '/role',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudioRoute = StudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VoiceRoute = VoiceRouteImport.update({
+  id: '/voice',
+  path: '/voice',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/capture': typeof CaptureRoute
+  '/costs': typeof CostsRoute
+  '/edit': typeof EditRoute
+  '/home': typeof HomeRoute
+  '/language': typeof LanguageRoute
+  '/listing': typeof ListingRoute
+  '/onboarding': typeof OnboardingRoute
+  '/price': typeof PriceRoute
+  '/processing': typeof ProcessingRoute
+  '/review': typeof ReviewRoute
+  '/role': typeof RoleRoute
+  '/studio': typeof StudioRoute
+  '/voice': typeof VoiceRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/capture': typeof CaptureRoute
+  '/costs': typeof CostsRoute
+  '/edit': typeof EditRoute
+  '/home': typeof HomeRoute
+  '/language': typeof LanguageRoute
+  '/listing': typeof ListingRoute
+  '/onboarding': typeof OnboardingRoute
+  '/price': typeof PriceRoute
+  '/processing': typeof ProcessingRoute
+  '/review': typeof ReviewRoute
+  '/role': typeof RoleRoute
+  '/studio': typeof StudioRoute
+  '/voice': typeof VoiceRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/capture': typeof CaptureRoute
+  '/costs': typeof CostsRoute
+  '/edit': typeof EditRoute
+  '/home': typeof HomeRoute
+  '/language': typeof LanguageRoute
+  '/listing': typeof ListingRoute
+  '/onboarding': typeof OnboardingRoute
+  '/price': typeof PriceRoute
+  '/processing': typeof ProcessingRoute
+  '/review': typeof ReviewRoute
+  '/role': typeof RoleRoute
+  '/studio': typeof StudioRoute
+  '/voice': typeof VoiceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/capture'
+    | '/costs'
+    | '/edit'
+    | '/home'
+    | '/language'
+    | '/listing'
+    | '/onboarding'
+    | '/price'
+    | '/processing'
+    | '/review'
+    | '/role'
+    | '/studio'
+    | '/voice'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/capture'
+    | '/costs'
+    | '/edit'
+    | '/home'
+    | '/language'
+    | '/listing'
+    | '/onboarding'
+    | '/price'
+    | '/processing'
+    | '/review'
+    | '/role'
+    | '/studio'
+    | '/voice'
+  id:
+    | '__root__'
+    | '/'
+    | '/capture'
+    | '/costs'
+    | '/edit'
+    | '/home'
+    | '/language'
+    | '/listing'
+    | '/onboarding'
+    | '/price'
+    | '/processing'
+    | '/review'
+    | '/role'
+    | '/studio'
+    | '/voice'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CaptureRoute: typeof CaptureRoute
+  CostsRoute: typeof CostsRoute
+  EditRoute: typeof EditRoute
+  HomeRoute: typeof HomeRoute
+  LanguageRoute: typeof LanguageRoute
+  ListingRoute: typeof ListingRoute
+  OnboardingRoute: typeof OnboardingRoute
+  PriceRoute: typeof PriceRoute
+  ProcessingRoute: typeof ProcessingRoute
+  ReviewRoute: typeof ReviewRoute
+  RoleRoute: typeof RoleRoute
+  StudioRoute: typeof StudioRoute
+  VoiceRoute: typeof VoiceRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +221,115 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/capture': {
+      id: '/capture'
+      path: '/capture'
+      fullPath: '/capture'
+      preLoaderRoute: typeof CaptureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/costs': {
+      id: '/costs'
+      path: '/costs'
+      fullPath: '/costs'
+      preLoaderRoute: typeof CostsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/edit': {
+      id: '/edit'
+      path: '/edit'
+      fullPath: '/edit'
+      preLoaderRoute: typeof EditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/language': {
+      id: '/language'
+      path: '/language'
+      fullPath: '/language'
+      preLoaderRoute: typeof LanguageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/listing': {
+      id: '/listing'
+      path: '/listing'
+      fullPath: '/listing'
+      preLoaderRoute: typeof ListingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/price': {
+      id: '/price'
+      path: '/price'
+      fullPath: '/price'
+      preLoaderRoute: typeof PriceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/processing': {
+      id: '/processing'
+      path: '/processing'
+      fullPath: '/processing'
+      preLoaderRoute: typeof ProcessingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/review': {
+      id: '/review'
+      path: '/review'
+      fullPath: '/review'
+      preLoaderRoute: typeof ReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/role': {
+      id: '/role'
+      path: '/role'
+      fullPath: '/role'
+      preLoaderRoute: typeof RoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/studio': {
+      id: '/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof StudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/voice': {
+      id: '/voice'
+      path: '/voice'
+      fullPath: '/voice'
+      preLoaderRoute: typeof VoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CaptureRoute: CaptureRoute,
+  CostsRoute: CostsRoute,
+  EditRoute: EditRoute,
+  HomeRoute: HomeRoute,
+  LanguageRoute: LanguageRoute,
+  ListingRoute: ListingRoute,
+  OnboardingRoute: OnboardingRoute,
+  PriceRoute: PriceRoute,
+  ProcessingRoute: ProcessingRoute,
+  ReviewRoute: ReviewRoute,
+  RoleRoute: RoleRoute,
+  StudioRoute: StudioRoute,
+  VoiceRoute: VoiceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
