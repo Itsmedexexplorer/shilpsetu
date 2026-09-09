@@ -79,6 +79,34 @@ function PublishedScreen() {
           </div>
         </div>
 
+        {url ? (
+          <div className="animate-rise mt-4 rounded-3xl bg-white/8 p-4">
+            <p className="text-[0.65rem] font-bold tracking-[0.14em] uppercase opacity-60">
+              Live buyer link
+            </p>
+            <div className="mt-2 flex items-center gap-3">
+              <a
+                href={url}
+                target="_blank"
+                rel="noreferrer"
+                className="min-w-0 flex-1 truncate text-sm font-bold text-saffron underline underline-offset-4"
+              >
+                {prettyUrl(url)}
+              </a>
+              <button
+                aria-label="Copy live link"
+                onClick={() => {
+                  navigator.clipboard?.writeText(url);
+                  toast.success("Live link copied");
+                }}
+                className="press grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-ivory text-charcoal"
+              >
+                <Copy size={16} />
+              </button>
+            </div>
+          </div>
+        ) : null}
+
         <div className="mt-5 grid grid-cols-2 gap-3">
           <Action
             Icon={Share2}
@@ -109,7 +137,7 @@ function PublishedScreen() {
         {showQr && url ? (
           <div className="animate-rise mt-4 grid place-items-center rounded-3xl bg-white p-5">
             <img
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}`}
+              src={qrUrl(url, 220)}
               alt="QR code linking to the product page"
               width={220}
               height={220}
