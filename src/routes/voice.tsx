@@ -36,6 +36,7 @@ function VoiceScreen() {
   const [unsure, setUnsure] = useState(false);
   const recRef = useRef<any>(null);
   const simRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const heardRef = useRef(false);
 
   useEffect(
     () => () => {
@@ -47,6 +48,7 @@ function VoiceScreen() {
 
   const simulate = () => {
     let i = 0;
+    heardRef.current = true;
     setUnsure(false);
     simRef.current = setInterval(() => {
       i += 3;
@@ -58,6 +60,7 @@ function VoiceScreen() {
   const start = () => {
     setRecording(true);
     setText("");
+    heardRef.current = false;
     const SR =
       typeof window !== "undefined" &&
       ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
@@ -70,6 +73,7 @@ function VoiceScreen() {
       rec.onresult = (e: any) => {
         let out = "";
         for (let i = 0; i < e.results.length; i++) out += e.results[i][0].transcript;
+        if (out.trim()) heardRef.current = true;
         setText(out);
         setUnsure(e.results[e.results.length - 1][0].confidence < 0.55);
       };
