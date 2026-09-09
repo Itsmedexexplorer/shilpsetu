@@ -80,10 +80,25 @@ function VoiceScreen() {
       rec.onend = () => setRecording(false);
       rec.start();
       recRef.current = rec;
+      // Safety net: if the mic gives us nothing, fall back to the demo voice note.
+      window.setTimeout(() => {
+        if (recRef.current === rec && !heardRef.current) {
+          try {
+            rec.onend = null;
+            rec.stop();
+          } catch {
+            /* ignore */
+          }
+          recRef.current = null;
+          setRecording(true);
+          simulate();
+        }
+      }, 3500);
     } catch {
       simulate();
     }
   };
+
 
   const stop = () => {
     setRecording(false);
