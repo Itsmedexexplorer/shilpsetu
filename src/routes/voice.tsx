@@ -1,7 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Mic, Square } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { Loader2, Mic, Square } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AreaField, Btn, ErrorNote, Screen, Title, TopBar } from "@/components/shilp/ui";
+import { transcribeAudio } from "@/lib/ai.functions";
 import { DEMO_TRANSCRIPT } from "@/lib/ai-demo";
 import { useShilp } from "@/lib/shilp-store";
 
@@ -20,102 +22,97 @@ export const Route = createFileRoute("/voice")({
   component: VoiceScreen,
 });
 
-const LANG_TAG: Record<string, string> = {
-  hi: "hi-IN",
-  en: "en-IN",
-  kn: "kn-IN",
-  ta: "ta-IN",
-  te: "te-IN",
-};
+const blobToBase64 = (blob: Blob) =>
+  new Promise<string>((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(String(r.result));
+    r.onerror = () => reject(new Error("read failed"));
+    r.readAsDataURL(blob);
+  });
 
 function VoiceScreen() {
   const { draft, patchDraft, language } = useShilp();
   const navigate = useNavigate();
+  const transcribe = useServerFn(transcribeAudio);
+
   const [recording, setRecording] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [text, setText] = useState(draft.transcript);
-  const [unsure, setUnsure] = useState(false);
-  const recRef = useRef<any>(null);
-  const simRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const heardRef = useRef(false);
+
+  const recRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
 
   useEffect(
     () => () => {
-      recRef.current?.stop?.();
-      if (simRef.current) clearInterval(simRef.current);
+      try {
+        recRef.current?.stream.getTracks().forEach((t) => t.stop());
+        if (recRef.current?.state === "recording") recRef.current.stop();
+      } catch {
+        /* ignore */
+      }
     },
     [],
   );
 
-  const simulate = () => {
-    let i = 0;
-    heardRef.current = true;
-    setUnsure(false);
-    simRef.current = setInterval(() => {
-      i += 3;
-      setText(DEMO_TRANSCRIPT.slice(0, i));
-      if (i >= DEMO_TRANSCRIPT.length) stop();
-    }, 45);
-  };
-
-  const start = () => {
-    setRecording(true);
-    setText("");
-    heardRef.current = false;
-    const SR =
-      typeof window !== "undefined" &&
-      ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
-    if (!SR) return simulate();
+  const start = async () => {
+    setError(null);
     try {
-      const rec = new SR();
-      rec.lang = LANG_TAG[language ?? "hi"] ?? "hi-IN";
-      rec.continuous = true;
-      rec.interimResults = true;
-      rec.onresult = (e: any) => {
-        let out = "";
-        for (let i = 0; i < e.results.length; i++) out += e.results[i][0].transcript;
-        if (out.trim()) heardRef.current = true;
-        setText(out);
-        setUnsure(e.results[e.results.length - 1][0].confidence < 0.55);
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mime = ["audio/webm", "audio/mp4"].find((m) =>
+        MediaRecorder.isTypeSupported(m),
+      );
+      const rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+      chunksRef.current = [];
+      rec.ondataavailable = (e) => {
+        if (e.data.size) chunksRef.current.push(e.data);
       };
-      rec.onerror = () => {
-        recRef.current = null;
-        simulate();
+      rec.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop());
+        const blob = new Blob(chunksRef.current, {
+          type: rec.mimeType || "audio/webm",
+        });
+        if (blob.size < 2048) {
+          setError("That recording was too short — please try again.");
+          return;
+        }
+        setBusy(true);
+        try {
+          const audio = await blobToBase64(blob);
+          const res = await transcribe({
+            data: {
+              audio,
+              mime: blob.type || "audio/webm",
+              language: language ?? "auto",
+            },
+          });
+          if (res.text) setText(res.text);
+          else setError("We couldn't hear any words. Please try again.");
+        } catch {
+          setError("Transcription didn't work just now. Try again or type below.");
+        } finally {
+          setBusy(false);
+        }
       };
-      rec.onend = () => setRecording(false);
       rec.start();
       recRef.current = rec;
-      // Safety net: if the mic gives us nothing, fall back to the demo voice note.
-      window.setTimeout(() => {
-        if (recRef.current === rec && !heardRef.current) {
-          try {
-            rec.onend = null;
-            rec.stop();
-          } catch {
-            /* ignore */
-          }
-          recRef.current = null;
-          setRecording(true);
-          simulate();
-        }
-      }, 3500);
+      setRecording(true);
     } catch {
-      simulate();
+      setError("Microphone is not available here. You can type or use the example.");
     }
   };
 
-
   const stop = () => {
     setRecording(false);
-    recRef.current?.stop?.();
-    recRef.current = null;
-    if (simRef.current) {
-      clearInterval(simRef.current);
-      simRef.current = null;
+    try {
+      if (recRef.current?.state === "recording") recRef.current.stop();
+    } catch {
+      /* ignore */
     }
   };
 
   const go = () => {
-    patchDraft({ transcript: text.trim() || DEMO_TRANSCRIPT });
+    patchDraft({ transcript: text.trim() });
     navigate({ to: "/processing" });
   };
 
@@ -139,17 +136,30 @@ function VoiceScreen() {
           ) : null}
           <button
             onClick={recording ? stop : start}
+            disabled={busy}
             aria-label={recording ? "Stop recording" : "Start recording"}
             className={`press relative grid h-32 w-32 place-items-center rounded-full text-white ${
               recording ? "bg-terracotta" : "bg-forest"
-            }`}
+            } ${busy ? "opacity-60" : ""}`}
           >
-            {recording ? <Square size={40} fill="currentColor" /> : <Mic size={48} />}
+            {busy ? (
+              <Loader2 size={44} className="animate-spin" />
+            ) : recording ? (
+              <Square size={40} fill="currentColor" />
+            ) : (
+              <Mic size={48} />
+            )}
           </button>
         </div>
 
         <p className="mt-2 text-lg font-extrabold">
-          {recording ? "Listening…" : text ? "Recorded" : "Tap to speak"}
+          {busy
+            ? "Understanding your words…"
+            : recording
+              ? "Listening…"
+              : text
+                ? "Recorded"
+                : "Tap to speak"}
         </p>
 
         <div className="mt-4 flex h-12 items-end gap-1.5">
@@ -167,16 +177,17 @@ function VoiceScreen() {
       </div>
 
       <div className="mt-6 space-y-3 px-5">
-        {unsure ? (
-          <ErrorNote
-            message="Some words were hard to hear."
-            onRetry={start}
-            onSkip={() => setUnsure(false)}
-          />
+        {error ? (
+          <ErrorNote message={error} onRetry={start} onSkip={() => setError(null)} />
         ) : null}
 
         {text ? (
-          <AreaField label="Your words (editable)" value={text} onChange={setText} rows={6} />
+          <AreaField
+            label="Your words (editable)"
+            value={text}
+            onChange={setText}
+            rows={6}
+          />
         ) : (
           <button
             onClick={() => setText(DEMO_TRANSCRIPT)}
@@ -189,7 +200,7 @@ function VoiceScreen() {
       </div>
 
       <div className="mt-auto px-5 pt-8 pb-8">
-        <Btn className={text ? "" : "opacity-40"} disabled={!text} onClick={go}>
+        <Btn className={text && !busy ? "" : "opacity-40"} disabled={!text || busy} onClick={go}>
           Generate Catalog
         </Btn>
       </div>
