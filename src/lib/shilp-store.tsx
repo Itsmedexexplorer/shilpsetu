@@ -316,6 +316,27 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
     }
   }, [market, ready]);
 
+  useEffect(() => {
+    if (!ready) return;
+    try {
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+    } catch {
+      /* storage full or unavailable */
+    }
+  }, [accounts, ready]);
+
+  // Keep the saved identity in step with edits made while signed in.
+  useEffect(() => {
+    if (!ready || !session.accountId || !session.role) return;
+    setAccounts((list) =>
+      list.map((a) =>
+        a.id === session.accountId
+          ? { ...a, role: session.role as Role, profile: session.profile }
+          : a,
+      ),
+    );
+  }, [ready, session.accountId, session.role, session.profile]);
+
   const value = useMemo<Ctx>(() => {
     const me = session.profile.name.trim().toLowerCase();
     const myProducts = market.products.filter(
