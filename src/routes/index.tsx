@@ -1,6 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Camera, IndianRupee, Mic, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
 import heroImg from "@/assets/artisan-hero.jpg";
 import { Btn } from "@/components/shilp/ui";
 import { useT } from "@/lib/i18n";
@@ -29,13 +28,6 @@ function Splash() {
   const { ready, language, role } = useShilp();
   const t = useT();
   const navigate = useNavigate();
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const id = setTimeout(() => setShow(true), 80);
-    return () => clearTimeout(id);
-  }, []);
-
   const returning = ready && !!language && !!role;
 
   const steps = [
@@ -51,9 +43,7 @@ function Splash() {
       <div className="pointer-events-none absolute -bottom-24 -left-20 h-64 w-64 rounded-full bg-forest/15 blur-2xl" />
 
       <div
-        className={`relative flex flex-1 flex-col px-6 pt-10 pb-[max(1.5rem,env(safe-area-inset-bottom))] transition-all duration-700 ${
-          show ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"
-        }`}
+        className="animate-rise relative flex flex-1 flex-col px-6 pt-10 pb-[max(1.5rem,env(safe-area-inset-bottom))]"
       >
         <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-forest/10 px-3 py-1.5 text-xs font-extrabold text-forest">
           <Sparkles size={14} /> {t("splash.badge")}
