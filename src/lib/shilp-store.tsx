@@ -169,8 +169,15 @@ type Ctx = Session &
         | "productId"
         | "quantity"
         | "message"
-      > & { offerPrice?: string },
+      > & {
+        offerPrice?: string;
+        kind?: Inquiry["kind"];
+        orgName?: string;
+        deadline?: string;
+        deliverTo?: string;
+      },
     ) => string;
+
 
     setInquiryStatus: (id: string, status: Inquiry["status"]) => void;
     /** Put a new price on the table from either side. */
