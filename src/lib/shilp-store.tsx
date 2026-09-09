@@ -32,6 +32,13 @@ export type Draft = {
   price: string;
 };
 
+export type Profile = {
+  name: string;
+  age: string;
+  location: string;
+  craft: string;
+};
+
 export type Product = {
   id: string;
   title: string;
@@ -44,6 +51,8 @@ export type Product = {
   craft: string;
   keywords: string[];
   createdAt: number;
+  /** Snapshot of the artisan who listed it, so buyers can see the maker. */
+  seller: Profile;
 };
 
 export type Inquiry = {
@@ -52,6 +61,7 @@ export type Inquiry = {
   contact: string;
   productId: string;
   productTitle: string;
+  sellerName: string;
   quantity: string;
   message: string;
   date: string;
@@ -73,46 +83,68 @@ export const emptyDraft: Draft = {
   price: "",
 };
 
-type State = {
+export const emptyProfile: Profile = { name: "", age: "", location: "", craft: "" };
+
+type Session = {
   language: LangCode | null;
   role: Role | null;
-  artisanName: string;
+  profile: Profile;
   draft: Draft;
+};
+
+type Market = {
   products: Product[];
   inquiries: Inquiry[];
 };
 
-const initial: State = {
+const initialSession: Session = {
   language: null,
   role: null,
-  artisanName: "Savitri",
+  profile: emptyProfile,
   draft: emptyDraft,
-  products: [],
-  inquiries: [],
 };
 
-type Ctx = State & {
-  ready: boolean;
-  set: (patch: Partial<State>) => void;
-  patchDraft: (patch: Partial<Draft>) => void;
-  resetDraft: () => void;
-  publishDraft: (status?: Product["status"]) => Product;
-  addInquiry: (i: Omit<Inquiry, "id" | "date" | "status">) => void;
-  setInquiryStatus: (id: string, status: Inquiry["status"]) => void;
-  signOut: () => void;
-};
+const initialMarket: Market = { products: [], inquiries: [] };
+
+type Ctx = Session &
+  Market & {
+    ready: boolean;
+    artisanName: string;
+    /** Products listed by the person signed in right now. */
+    myProducts: Product[];
+    /** Published listings from every artisan on this device. */
+    marketProducts: Product[];
+    /** Inquiries an artisan received. */
+    receivedInquiries: Inquiry[];
+    /** Inquiries the signed-in buyer has sent. */
+    sentInquiries: Inquiry[];
+    set: (patch: Partial<Session>) => void;
+    setProfile: (patch: Partial<Profile>) => void;
+    patchDraft: (patch: Partial<Draft>) => void;
+    resetDraft: () => void;
+    publishDraft: (status?: Product["status"]) => Product;
+    addInquiry: (
+      i: Omit<Inquiry, "id" | "date" | "status" | "sellerName">,
+    ) => void;
+    setInquiryStatus: (id: string, status: Inquiry["status"]) => void;
+    signOut: () => void;
+  };
 
 const StoreContext = createContext<Ctx | null>(null);
-const KEY = "shilpsetu.v1";
+const SESSION_KEY = "shilpsetu.session.v2";
+const MARKET_KEY = "shilpsetu.market.v2";
 
 export function ShilpProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<State>(initial);
+  const [session, setSession] = useState<Session>(initialSession);
+  const [market, setMarket] = useState<Market>(initialMarket);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) setState({ ...initial, ...(JSON.parse(raw) as State) });
+      const s = localStorage.getItem(SESSION_KEY);
+      if (s) setSession({ ...initialSession, ...(JSON.parse(s) as Session) });
+      const m = localStorage.getItem(MARKET_KEY);
+      if (m) setMarket({ ...initialMarket, ...(JSON.parse(m) as Market) });
     } catch {
       /* ignore corrupted state */
     }
@@ -122,23 +154,48 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!ready) return;
     try {
-      localStorage.setItem(KEY, JSON.stringify(state));
+      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
     } catch {
       /* storage full or unavailable */
     }
-  }, [state, ready]);
+  }, [session, ready]);
+
+  useEffect(() => {
+    if (!ready) return;
+    try {
+      localStorage.setItem(MARKET_KEY, JSON.stringify(market));
+    } catch {
+      /* storage full or unavailable */
+    }
+  }, [market, ready]);
 
   const value = useMemo<Ctx>(() => {
-    const set = (patch: Partial<State>) => setState((s) => ({ ...s, ...patch }));
+    const me = session.profile.name.trim().toLowerCase();
+    const myProducts = market.products.filter(
+      (p) => !me || (p.seller?.name ?? "").trim().toLowerCase() === me,
+    );
+
     return {
-      ...state,
+      ...session,
+      ...market,
       ready,
-      set,
+      artisanName: session.profile.name || "Friend",
+      myProducts,
+      marketProducts: market.products.filter((p) => p.status === "published"),
+      receivedInquiries: market.inquiries.filter(
+        (i) => !me || i.sellerName.trim().toLowerCase() === me,
+      ),
+      sentInquiries: market.inquiries.filter(
+        (i) => !!me && i.buyer.trim().toLowerCase() === me,
+      ),
+      set: (patch) => setSession((s) => ({ ...s, ...patch })),
+      setProfile: (patch) =>
+        setSession((s) => ({ ...s, profile: { ...s.profile, ...patch } })),
       patchDraft: (patch) =>
-        setState((s) => ({ ...s, draft: { ...s.draft, ...patch } })),
-      resetDraft: () => setState((s) => ({ ...s, draft: emptyDraft })),
+        setSession((s) => ({ ...s, draft: { ...s.draft, ...patch } })),
+      resetDraft: () => setSession((s) => ({ ...s, draft: emptyDraft })),
       publishDraft: (status = "published") => {
-        const d = state.draft;
+        const d = session.draft;
         const product: Product = {
           id: `p${Date.now()}`,
           title: d.title || "Untitled craft",
@@ -151,41 +208,46 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
           craft: d.craft,
           keywords: d.keywords,
           createdAt: Date.now(),
+          seller: { ...session.profile },
         };
-        setState((s) => ({ ...s, products: [product, ...s.products] }));
+        setMarket((m) => ({ ...m, products: [product, ...m.products] }));
         return product;
       },
       addInquiry: (i) =>
-        setState((s) => ({
-          ...s,
-          inquiries: [
-            {
-              ...i,
-              id: `i${Date.now()}`,
-              date: new Date().toLocaleDateString("en-IN", {
-                day: "2-digit",
-                month: "short",
-              }),
-              status: "new",
-            },
-            ...s.inquiries,
-          ],
-        })),
+        setMarket((m) => {
+          const product = m.products.find((p) => p.id === i.productId);
+          return {
+            ...m,
+            inquiries: [
+              {
+                ...i,
+                sellerName: product?.seller?.name ?? "",
+                id: `i${Date.now()}`,
+                date: new Date().toLocaleDateString("en-IN", {
+                  day: "2-digit",
+                  month: "short",
+                }),
+                status: "new",
+              },
+              ...m.inquiries,
+            ],
+          };
+        }),
       signOut: () => {
         try {
-          localStorage.removeItem(KEY);
+          localStorage.removeItem(SESSION_KEY);
         } catch {
           /* storage unavailable */
         }
-        setState(initial);
+        setSession(initialSession);
       },
       setInquiryStatus: (id, status) =>
-        setState((s) => ({
-          ...s,
-          inquiries: s.inquiries.map((x) => (x.id === id ? { ...x, status } : x)),
+        setMarket((m) => ({
+          ...m,
+          inquiries: m.inquiries.map((x) => (x.id === id ? { ...x, status } : x)),
         })),
     };
-  }, [state, ready]);
+  }, [session, market, ready]);
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 }
