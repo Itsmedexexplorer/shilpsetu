@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import demoAfter from "@/assets/vase-after.jpg";
 import { Btn, Screen } from "@/components/shilp/ui";
+import { prettyUrl, productUrl, qrUrl } from "@/lib/share";
 import { rupees, useShilp } from "@/lib/shilp-store";
 
 export const Route = createFileRoute("/published")({
