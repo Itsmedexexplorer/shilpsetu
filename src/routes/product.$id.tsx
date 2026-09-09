@@ -207,9 +207,18 @@ function BuyerView() {
       </div>
 
       <div className="sticky bottom-0 space-y-2 border-t border-charcoal/10 bg-white/95 px-6 pt-4 pb-6 backdrop-blur">
-        <Btn onClick={() => navigate({ to: "/inquiry/$id", params: { id: p.id } })}>
-          Contact Artisan
-        </Btn>
+        {role === "org" ? (
+          <Btn
+            icon={<Package size={20} />}
+            onClick={() => navigate({ to: "/bulk/$id", params: { id: p.id } })}
+          >
+            {t("bulk.cta")}
+          </Btn>
+        ) : (
+          <Btn onClick={() => navigate({ to: "/inquiry/$id", params: { id: p.id } })}>
+            Contact Artisan
+          </Btn>
+        )}
         <Btn
           variant="forest"
           icon={<Handshake size={20} />}
@@ -218,6 +227,7 @@ function BuyerView() {
           {t("product.makeOffer")}
         </Btn>
       </div>
+
     </div>
   );
 }
