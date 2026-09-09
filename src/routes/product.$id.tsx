@@ -76,7 +76,9 @@ function BuyerView() {
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/35 to-transparent" />
         <button
           aria-label="Back"
-          onClick={() => navigate({ to: "/catalog" })}
+          onClick={() =>
+            navigate({ to: role === "artisan" ? "/catalog" : "/market" })
+          }
           className="press absolute top-5 left-5 grid h-11 w-11 place-items-center rounded-full bg-white/85 text-charcoal backdrop-blur"
         >
           <ArrowLeft size={20} />
@@ -176,10 +178,17 @@ function BuyerView() {
           />
           <div className="min-w-0">
             <p className="text-xs tracking-[0.15em] uppercase opacity-60">Made by</p>
-            <p className="text-lg font-extrabold">{artisanName} Devi</p>
+            <p className="text-lg font-extrabold">
+              {p.seller?.name || "A SHILPSETU artisan"}
+            </p>
             <p className="mt-1 text-sm opacity-75">
-              {p.craft || "Craft"} artisan · Kutch, Gujarat. Working with clay from the
-              village pond since she was fifteen.
+              {[
+                p.seller?.craft || p.craft || "Craft",
+                p.seller?.location,
+                p.seller?.age ? `${p.seller.age} years` : "",
+              ]
+                .filter(Boolean)
+                .join(" · ")}
             </p>
           </div>
         </div>
