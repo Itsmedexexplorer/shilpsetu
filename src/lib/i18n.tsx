@@ -4,6 +4,19 @@ import { useShilp, type LangCode } from "@/lib/shilp-store";
 type Dict = Record<string, string>;
 
 const en: Dict = {
+  "accounts.step": "Profiles",
+  "accounts.title": "Who is using the app?",
+  "accounts.sub": "Switch between saved profiles or try a ready-made one.",
+  "accounts.switch": "Switch profile",
+  "accounts.add": "Add a new profile",
+  "accounts.remove": "Remove profile",
+  "accounts.empty": "No profile saved yet. Try a demo below or add your own.",
+  "accounts.demoTag": "demo",
+  "accounts.demoTitle": "Try a demo profile",
+  "accounts.demoSub": "One tap to look around as an artisan, a buyer or an organization.",
+  "accounts.roleTitle": "I am using this as",
+  "accounts.roleSub": "Same name and photo — just a different side of the market.",
+  "splash.demo": "Try a demo",
   "app.tagline": "From Craft to Commerce in 60 Seconds.",
   "app.line1": "Same hands.",
   "app.line2": "Bigger markets.",
@@ -223,6 +236,19 @@ const en: Dict = {
 
 
 const hi: Dict = {
+  "accounts.step": "प्रोफ़ाइल",
+  "accounts.title": "ऐप कौन चला रहा है?",
+  "accounts.sub": "सहेजी प्रोफ़ाइल बदलें या तैयार डेमो आज़माएँ।",
+  "accounts.switch": "प्रोफ़ाइल बदलें",
+  "accounts.add": "नई प्रोफ़ाइल जोड़ें",
+  "accounts.remove": "प्रोफ़ाइल हटाएँ",
+  "accounts.empty": "अभी कोई प्रोफ़ाइल नहीं है। नीचे डेमो आज़माएँ या अपनी बनाएँ।",
+  "accounts.demoTag": "डेमो",
+  "accounts.demoTitle": "डेमो प्रोफ़ाइल आज़माएँ",
+  "accounts.demoSub": "एक टैप में कारीगर, ख़रीदार या संस्था बनकर देखें।",
+  "accounts.roleTitle": "मैं इसे इस रूप में चला रहा/रही हूँ",
+  "accounts.roleSub": "वही नाम और फ़ोटो — बस बाज़ार का दूसरा पहलू।",
+  "splash.demo": "डेमो देखें",
   "app.tagline": "60 सेकंड में शिल्प से बाज़ार तक।",
   "app.line1": "वही हाथ।",
   "app.line2": "बड़ा बाज़ार।",

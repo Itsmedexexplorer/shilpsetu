@@ -121,12 +121,61 @@ export const emptyProfile: Profile = {
 };
 
 
+/** A saved identity on this device. One person can switch between them. */
+export type Account = {
+  id: string;
+  role: Role;
+  profile: Profile;
+  demo: boolean;
+  createdAt: number;
+};
+
 type Session = {
   language: LangCode | null;
   role: Role | null;
   profile: Profile;
   draft: Draft;
+  accountId: string | null;
 };
+
+export const DEMO_ACCOUNTS: Omit<Account, "createdAt">[] = [
+  {
+    id: "demo-artisan",
+    role: "artisan",
+    demo: true,
+    profile: {
+      name: "Meera Kumbhar",
+      age: "42",
+      location: "Kutch, Gujarat",
+      craft: "Terracotta pottery",
+      avatar: "",
+    },
+  },
+  {
+    id: "demo-buyer",
+    role: "buyer",
+    demo: true,
+    profile: {
+      name: "Ananya Rao",
+      age: "29",
+      location: "Bengaluru, Karnataka",
+      craft: "",
+      avatar: "",
+    },
+  },
+  {
+    id: "demo-org",
+    role: "org",
+    demo: true,
+    profile: {
+      name: "Craft Bazaar Collective",
+      age: "",
+      location: "New Delhi",
+      craft: "Bulk buying for retail stores",
+      avatar: "",
+    },
+  },
+];
 
 type Market = {
   products: Product[];
@@ -138,6 +187,7 @@ const initialSession: Session = {
   role: null,
   profile: emptyProfile,
   draft: emptyDraft,
+  accountId: null,
 };
 
 const initialMarket: Market = { products: [], inquiries: [] };
@@ -185,15 +235,29 @@ type Ctx = Session &
     /** Both sides settle on a final price. */
     acceptOffer: (id: string, price: string) => void;
     signOut: () => void;
+    /** Every identity saved on this device. */
+    accounts: Account[];
+    /** Sign in as a saved identity. */
+    useAccount: (id: string) => Account | undefined;
+    /** Start a fresh empty identity with the chosen role. */
+    createAccount: (role: Role, profile?: Profile) => string;
+    /** Load one of the ready-made demo identities. */
+    startDemo: (id: string) => Account | undefined;
+    /** Same person, different side of the market. */
+    switchRole: (role: Role) => void;
+    /** Forget a saved identity on this device. */
+    removeAccount: (id: string) => void;
   };
 
 const StoreContext = createContext<Ctx | null>(null);
 const SESSION_KEY = "shilpsetu.session.v2";
 const MARKET_KEY = "shilpsetu.market.v2";
+const ACCOUNTS_KEY = "shilpsetu.accounts.v1";
 
 export function ShilpProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session>(initialSession);
   const [market, setMarket] = useState<Market>(initialMarket);
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -225,6 +289,9 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
 
         setMarket(parsedMarket);
       }
+
+      const a = localStorage.getItem(ACCOUNTS_KEY);
+      if (a) setAccounts(JSON.parse(a) as Account[]);
     } catch {
       /* ignore corrupted state */
     }
@@ -249,6 +316,27 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
     }
   }, [market, ready]);
 
+  useEffect(() => {
+    if (!ready) return;
+    try {
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+    } catch {
+      /* storage full or unavailable */
+    }
+  }, [accounts, ready]);
+
+  // Keep the saved identity in step with edits made while signed in.
+  useEffect(() => {
+    if (!ready || !session.accountId || !session.role) return;
+    setAccounts((list) =>
+      list.map((a) =>
+        a.id === session.accountId
+          ? { ...a, role: session.role as Role, profile: session.profile }
+          : a,
+      ),
+    );
+  }, [ready, session.accountId, session.role, session.profile]);
+
   const value = useMemo<Ctx>(() => {
     const me = session.profile.name.trim().toLowerCase();
     const myProducts = market.products.filter(
@@ -258,6 +346,7 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
     return {
       ...session,
       ...market,
+      accounts,
       ready,
       artisanName: session.profile.name || "Friend",
       myProducts,
@@ -343,7 +432,57 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
         } catch {
           /* storage unavailable */
         }
-        setSession(initialSession);
+        setSession((s) => ({ ...initialSession, language: s.language }));
+      },
+      useAccount: (id) => {
+        const acc = accounts.find((a) => a.id === id);
+        if (acc)
+          setSession((s) => ({
+            ...s,
+            accountId: acc.id,
+            role: acc.role,
+            profile: { ...emptyProfile, ...acc.profile },
+            draft: emptyDraft,
+          }));
+        return acc;
+      },
+      createAccount: (role, profile) => {
+        const id = `a${Date.now()}`;
+        const p = { ...emptyProfile, ...(profile ?? {}) };
+        setAccounts((list) => [
+          ...list,
+          { id, role, profile: p, demo: false, createdAt: Date.now() },
+        ]);
+        setSession((s) => ({
+          ...s,
+          accountId: id,
+          role,
+          profile: p,
+          draft: profile ? s.draft : emptyDraft,
+        }));
+        return id;
+      },
+      startDemo: (id) => {
+        const seed = DEMO_ACCOUNTS.find((d) => d.id === id);
+        if (!seed) return undefined;
+        const existing = accounts.find((a) => a.id === id);
+        const acc: Account = existing ?? { ...seed, createdAt: Date.now() };
+        if (!existing) setAccounts((list) => [...list, acc]);
+        setSession((s) => ({
+          ...s,
+          accountId: acc.id,
+          role: acc.role,
+          profile: { ...emptyProfile, ...acc.profile },
+          draft: emptyDraft,
+        }));
+        return acc;
+      },
+      switchRole: (role) => setSession((s) => ({ ...s, role })),
+      removeAccount: (id) => {
+        setAccounts((list) => list.filter((a) => a.id !== id));
+        setSession((s) =>
+          s.accountId === id ? { ...initialSession, language: s.language } : s,
+        );
       },
       setInquiryStatus: (id, status) =>
         setMarket((m) => ({
@@ -374,7 +513,7 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
           ),
         })),
     };
-  }, [session, market, ready]);
+  }, [session, market, accounts, ready]);
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 }

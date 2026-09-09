@@ -97,11 +97,19 @@ function Splash() {
             {returning ? t("splash.continue") : t("splash.start")}
           </button>
 
-          <Link to="/language" className="block py-2.5 text-center">
-            <span className="text-sm font-semibold text-ivory/70 underline underline-offset-4">
-              {t("splash.language")}
-            </span>
-          </Link>
+          <div className="flex items-center justify-center gap-4 py-2.5">
+            <Link to="/language">
+              <span className="text-sm font-semibold text-ivory/70 underline underline-offset-4">
+                {t("splash.language")}
+              </span>
+            </Link>
+            <span className="text-ivory/30">·</span>
+            <Link to="/accounts">
+              <span className="text-sm font-semibold text-saffron underline underline-offset-4">
+                {t("splash.demo")}
+              </span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

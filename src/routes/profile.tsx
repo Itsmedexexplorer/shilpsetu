@@ -9,6 +9,7 @@ import {
   Package,
   Pencil,
   Store,
+  Users,
 } from "lucide-react";
 import { AvatarPicker } from "@/components/shilp/AvatarPicker";
 import { BottomNav } from "@/components/shilp/BottomNav";
@@ -33,7 +34,8 @@ export const Route = createFileRoute("/profile")({
 });
 
 function ProfileScreen() {
-  const { profile, setProfile, myProducts, sentInquiries, role } = useShilp();
+  const { profile, setProfile, myProducts, sentInquiries, role, switchRole } =
+    useShilp();
   const t = useT();
   const navigate = useNavigate();
   const isBuyer = role === "buyer" || role === "org";
@@ -104,7 +106,41 @@ function ProfileScreen() {
       </div>
 
 
+      <section className="mt-5 px-5">
+        <p className="mb-2 text-xs font-bold tracking-wide uppercase opacity-55">
+          {t("accounts.roleTitle")}
+        </p>
+        <div className="grid grid-cols-3 gap-2 rounded-2xl bg-white p-1.5 ring-1 ring-charcoal/8">
+          {(["artisan", "buyer", "org"] as const).map((r) => (
+            <button
+              key={r}
+              onClick={() => {
+                switchRole(r);
+                navigate({ to: r === "artisan" ? "/home" : "/market" });
+              }}
+              className={`press rounded-xl py-2.5 text-sm font-extrabold ${
+                role === r ? "bg-forest text-ivory" : "text-charcoal/55"
+              }`}
+            >
+              {t(`role.${r}`)}
+            </button>
+          ))}
+        </div>
+        <p className="mt-2 text-xs opacity-55">{t("accounts.roleSub")}</p>
+      </section>
+
       <div className="mt-5 space-y-2 px-5">
+        <Link
+          to="/accounts"
+          className="press flex items-center gap-3 rounded-2xl bg-white p-4 ring-1 ring-charcoal/8"
+        >
+          <Users size={20} className="shrink-0 text-forest" />
+          <span className="min-w-0 flex-1 truncate font-bold">
+            {t("accounts.switch")}
+          </span>
+          <ChevronRight size={18} className="shrink-0 opacity-40" />
+        </Link>
+
         {rows.map(({ Icon, label, to }) => (
           <Link
             key={label}

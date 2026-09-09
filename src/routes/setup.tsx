@@ -24,7 +24,7 @@ export const Route = createFileRoute("/setup")({
 });
 
 function SetupScreen() {
-  const { profile, setProfile, role } = useShilp();
+  const { profile, setProfile, role, accountId, createAccount } = useShilp();
   const t = useT();
   const navigate = useNavigate();
   const valid = profile.name.trim().length > 1;
@@ -77,9 +77,10 @@ function SetupScreen() {
         <Btn
           disabled={!valid}
           className={valid ? "" : "opacity-40"}
-          onClick={() =>
-            navigate({ to: role === "artisan" ? "/home" : "/market" })
-          }
+          onClick={() => {
+            if (!accountId && role) createAccount(role, profile);
+            navigate({ to: role === "artisan" ? "/home" : "/market" });
+          }}
         >
           {t("common.continue")}
         </Btn>
