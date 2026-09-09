@@ -121,12 +121,61 @@ export const emptyProfile: Profile = {
 };
 
 
+/** A saved identity on this device. One person can switch between them. */
+export type Account = {
+  id: string;
+  role: Role;
+  profile: Profile;
+  demo: boolean;
+  createdAt: number;
+};
+
 type Session = {
   language: LangCode | null;
   role: Role | null;
   profile: Profile;
   draft: Draft;
+  accountId: string | null;
 };
+
+export const DEMO_ACCOUNTS: Omit<Account, "createdAt">[] = [
+  {
+    id: "demo-artisan",
+    role: "artisan",
+    demo: true,
+    profile: {
+      name: "Meera Kumbhar",
+      age: "42",
+      location: "Kutch, Gujarat",
+      craft: "Terracotta pottery",
+      avatar: "",
+    },
+  },
+  {
+    id: "demo-buyer",
+    role: "buyer",
+    demo: true,
+    profile: {
+      name: "Ananya Rao",
+      age: "29",
+      location: "Bengaluru, Karnataka",
+      craft: "",
+      avatar: "",
+    },
+  },
+  {
+    id: "demo-org",
+    role: "org",
+    demo: true,
+    profile: {
+      name: "Craft Bazaar Collective",
+      age: "",
+      location: "New Delhi",
+      craft: "Bulk buying for retail stores",
+      avatar: "",
+    },
+  },
+];
 
 type Market = {
   products: Product[];
