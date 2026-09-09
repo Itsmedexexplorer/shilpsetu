@@ -18,13 +18,16 @@ import { Route as HomeRouteImport } from './routes/home'
 import { Route as LanguageRouteImport } from './routes/language'
 import { Route as ListingRouteImport } from './routes/listing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as PriceRouteImport } from './routes/price'
 import { Route as ProcessingRouteImport } from './routes/processing'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PublishedRouteImport } from './routes/published'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as RoleRouteImport } from './routes/role'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as VoiceRouteImport } from './routes/voice'
+import { Route as InquiryIdRouteImport } from './routes/inquiry.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -72,6 +75,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PriceRoute = PriceRouteImport.update({
   id: '/price',
   path: '/price',
@@ -80,6 +88,11 @@ const PriceRoute = PriceRouteImport.update({
 const ProcessingRoute = ProcessingRouteImport.update({
   id: '/processing',
   path: '/processing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublishedRoute = PublishedRouteImport.update({
@@ -107,6 +120,11 @@ const VoiceRoute = VoiceRouteImport.update({
   path: '/voice',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InquiryIdRoute = InquiryIdRouteImport.update({
+  id: '/inquiry/$id',
+  path: '/inquiry/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductIdRoute = ProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
@@ -123,13 +141,16 @@ export interface FileRoutesByFullPath {
   '/language': typeof LanguageRoute
   '/listing': typeof ListingRoute
   '/onboarding': typeof OnboardingRoute
+  '/orders': typeof OrdersRoute
   '/price': typeof PriceRoute
   '/processing': typeof ProcessingRoute
+  '/profile': typeof ProfileRoute
   '/published': typeof PublishedRoute
   '/review': typeof ReviewRoute
   '/role': typeof RoleRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
+  '/inquiry/$id': typeof InquiryIdRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesByTo {
@@ -142,13 +163,16 @@ export interface FileRoutesByTo {
   '/language': typeof LanguageRoute
   '/listing': typeof ListingRoute
   '/onboarding': typeof OnboardingRoute
+  '/orders': typeof OrdersRoute
   '/price': typeof PriceRoute
   '/processing': typeof ProcessingRoute
+  '/profile': typeof ProfileRoute
   '/published': typeof PublishedRoute
   '/review': typeof ReviewRoute
   '/role': typeof RoleRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
+  '/inquiry/$id': typeof InquiryIdRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesById {
@@ -162,13 +186,16 @@ export interface FileRoutesById {
   '/language': typeof LanguageRoute
   '/listing': typeof ListingRoute
   '/onboarding': typeof OnboardingRoute
+  '/orders': typeof OrdersRoute
   '/price': typeof PriceRoute
   '/processing': typeof ProcessingRoute
+  '/profile': typeof ProfileRoute
   '/published': typeof PublishedRoute
   '/review': typeof ReviewRoute
   '/role': typeof RoleRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
+  '/inquiry/$id': typeof InquiryIdRoute
   '/product/$id': typeof ProductIdRoute
 }
 export interface FileRouteTypes {
@@ -183,13 +210,16 @@ export interface FileRouteTypes {
     | '/language'
     | '/listing'
     | '/onboarding'
+    | '/orders'
     | '/price'
     | '/processing'
+    | '/profile'
     | '/published'
     | '/review'
     | '/role'
     | '/studio'
     | '/voice'
+    | '/inquiry/$id'
     | '/product/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -202,13 +232,16 @@ export interface FileRouteTypes {
     | '/language'
     | '/listing'
     | '/onboarding'
+    | '/orders'
     | '/price'
     | '/processing'
+    | '/profile'
     | '/published'
     | '/review'
     | '/role'
     | '/studio'
     | '/voice'
+    | '/inquiry/$id'
     | '/product/$id'
   id:
     | '__root__'
@@ -221,13 +254,16 @@ export interface FileRouteTypes {
     | '/language'
     | '/listing'
     | '/onboarding'
+    | '/orders'
     | '/price'
     | '/processing'
+    | '/profile'
     | '/published'
     | '/review'
     | '/role'
     | '/studio'
     | '/voice'
+    | '/inquiry/$id'
     | '/product/$id'
   fileRoutesById: FileRoutesById
 }
@@ -241,13 +277,16 @@ export interface RootRouteChildren {
   LanguageRoute: typeof LanguageRoute
   ListingRoute: typeof ListingRoute
   OnboardingRoute: typeof OnboardingRoute
+  OrdersRoute: typeof OrdersRoute
   PriceRoute: typeof PriceRoute
   ProcessingRoute: typeof ProcessingRoute
+  ProfileRoute: typeof ProfileRoute
   PublishedRoute: typeof PublishedRoute
   ReviewRoute: typeof ReviewRoute
   RoleRoute: typeof RoleRoute
   StudioRoute: typeof StudioRoute
   VoiceRoute: typeof VoiceRoute
+  InquiryIdRoute: typeof InquiryIdRoute
   ProductIdRoute: typeof ProductIdRoute
 }
 
@@ -316,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/price': {
       id: '/price'
       path: '/price'
@@ -328,6 +374,13 @@ declare module '@tanstack/react-router' {
       path: '/processing'
       fullPath: '/processing'
       preLoaderRoute: typeof ProcessingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/published': {
@@ -365,6 +418,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VoiceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/inquiry/$id': {
+      id: '/inquiry/$id'
+      path: '/inquiry/$id'
+      fullPath: '/inquiry/$id'
+      preLoaderRoute: typeof InquiryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/product/$id': {
       id: '/product/$id'
       path: '/product/$id'
@@ -385,13 +445,16 @@ const rootRouteChildren: RootRouteChildren = {
   LanguageRoute: LanguageRoute,
   ListingRoute: ListingRoute,
   OnboardingRoute: OnboardingRoute,
+  OrdersRoute: OrdersRoute,
   PriceRoute: PriceRoute,
   ProcessingRoute: ProcessingRoute,
+  ProfileRoute: ProfileRoute,
   PublishedRoute: PublishedRoute,
   ReviewRoute: ReviewRoute,
   RoleRoute: RoleRoute,
   StudioRoute: StudioRoute,
   VoiceRoute: VoiceRoute,
+  InquiryIdRoute: InquiryIdRoute,
   ProductIdRoute: ProductIdRoute,
 }
 export const routeTree = rootRouteImport
