@@ -147,7 +147,10 @@ Return JSON only with keys: title (max 8 words, names the real object), descript
     const json = (await res.json()) as {
       choices?: { message?: { content?: string } }[];
     };
-    const raw = json.choices?.[0]?.message?.content ?? "{}";
+    const raw = (json.choices?.[0]?.message?.content ?? "{}")
+      .replace(/^\s*```(?:json)?/i, "")
+      .replace(/```\s*$/, "")
+      .trim();
     const parsed = JSON.parse(raw) as ListingResult;
     return {
       title: parsed.title || "Handmade Craft",
