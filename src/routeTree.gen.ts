@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CaptureRouteImport } from './routes/capture'
+import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as CostsRouteImport } from './routes/costs'
 import { Route as EditRouteImport } from './routes/edit'
 import { Route as HomeRouteImport } from './routes/home'
@@ -19,10 +20,12 @@ import { Route as ListingRouteImport } from './routes/listing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PriceRouteImport } from './routes/price'
 import { Route as ProcessingRouteImport } from './routes/processing'
+import { Route as PublishedRouteImport } from './routes/published'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as RoleRouteImport } from './routes/role'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as VoiceRouteImport } from './routes/voice'
+import { Route as ProductIdRouteImport } from './routes/product.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -32,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
 const CaptureRoute = CaptureRouteImport.update({
   id: '/capture',
   path: '/capture',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CatalogRoute = CatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CostsRoute = CostsRouteImport.update({
@@ -74,6 +82,11 @@ const ProcessingRoute = ProcessingRouteImport.update({
   path: '/processing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PublishedRoute = PublishedRouteImport.update({
+  id: '/published',
+  path: '/published',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReviewRoute = ReviewRouteImport.update({
   id: '/review',
   path: '/review',
@@ -94,10 +107,16 @@ const VoiceRoute = VoiceRouteImport.update({
   path: '/voice',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductIdRoute = ProductIdRouteImport.update({
+  id: '/product/$id',
+  path: '/product/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/capture': typeof CaptureRoute
+  '/catalog': typeof CatalogRoute
   '/costs': typeof CostsRoute
   '/edit': typeof EditRoute
   '/home': typeof HomeRoute
@@ -106,14 +125,17 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/price': typeof PriceRoute
   '/processing': typeof ProcessingRoute
+  '/published': typeof PublishedRoute
   '/review': typeof ReviewRoute
   '/role': typeof RoleRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
+  '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/capture': typeof CaptureRoute
+  '/catalog': typeof CatalogRoute
   '/costs': typeof CostsRoute
   '/edit': typeof EditRoute
   '/home': typeof HomeRoute
@@ -122,15 +144,18 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/price': typeof PriceRoute
   '/processing': typeof ProcessingRoute
+  '/published': typeof PublishedRoute
   '/review': typeof ReviewRoute
   '/role': typeof RoleRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
+  '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/capture': typeof CaptureRoute
+  '/catalog': typeof CatalogRoute
   '/costs': typeof CostsRoute
   '/edit': typeof EditRoute
   '/home': typeof HomeRoute
@@ -139,16 +164,19 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/price': typeof PriceRoute
   '/processing': typeof ProcessingRoute
+  '/published': typeof PublishedRoute
   '/review': typeof ReviewRoute
   '/role': typeof RoleRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
+  '/product/$id': typeof ProductIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/capture'
+    | '/catalog'
     | '/costs'
     | '/edit'
     | '/home'
@@ -157,14 +185,17 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/price'
     | '/processing'
+    | '/published'
     | '/review'
     | '/role'
     | '/studio'
     | '/voice'
+    | '/product/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/capture'
+    | '/catalog'
     | '/costs'
     | '/edit'
     | '/home'
@@ -173,14 +204,17 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/price'
     | '/processing'
+    | '/published'
     | '/review'
     | '/role'
     | '/studio'
     | '/voice'
+    | '/product/$id'
   id:
     | '__root__'
     | '/'
     | '/capture'
+    | '/catalog'
     | '/costs'
     | '/edit'
     | '/home'
@@ -189,15 +223,18 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/price'
     | '/processing'
+    | '/published'
     | '/review'
     | '/role'
     | '/studio'
     | '/voice'
+    | '/product/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CaptureRoute: typeof CaptureRoute
+  CatalogRoute: typeof CatalogRoute
   CostsRoute: typeof CostsRoute
   EditRoute: typeof EditRoute
   HomeRoute: typeof HomeRoute
@@ -206,10 +243,12 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   PriceRoute: typeof PriceRoute
   ProcessingRoute: typeof ProcessingRoute
+  PublishedRoute: typeof PublishedRoute
   ReviewRoute: typeof ReviewRoute
   RoleRoute: typeof RoleRoute
   StudioRoute: typeof StudioRoute
   VoiceRoute: typeof VoiceRoute
+  ProductIdRoute: typeof ProductIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -226,6 +265,13 @@ declare module '@tanstack/react-router' {
       path: '/capture'
       fullPath: '/capture'
       preLoaderRoute: typeof CaptureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/catalog': {
+      id: '/catalog'
+      path: '/catalog'
+      fullPath: '/catalog'
+      preLoaderRoute: typeof CatalogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/costs': {
@@ -284,6 +330,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProcessingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/published': {
+      id: '/published'
+      path: '/published'
+      fullPath: '/published'
+      preLoaderRoute: typeof PublishedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/review': {
       id: '/review'
       path: '/review'
@@ -312,12 +365,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VoiceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/product/$id': {
+      id: '/product/$id'
+      path: '/product/$id'
+      fullPath: '/product/$id'
+      preLoaderRoute: typeof ProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CaptureRoute: CaptureRoute,
+  CatalogRoute: CatalogRoute,
   CostsRoute: CostsRoute,
   EditRoute: EditRoute,
   HomeRoute: HomeRoute,
@@ -326,10 +387,12 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   PriceRoute: PriceRoute,
   ProcessingRoute: ProcessingRoute,
+  PublishedRoute: PublishedRoute,
   ReviewRoute: ReviewRoute,
   RoleRoute: RoleRoute,
   StudioRoute: StudioRoute,
   VoiceRoute: VoiceRoute,
+  ProductIdRoute: ProductIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
