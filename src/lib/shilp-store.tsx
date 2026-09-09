@@ -85,7 +85,16 @@ export type Inquiry = {
   /** Final price both sides settled on. */
   agreedPrice: string;
   offers: Offer[];
+  /** A single buyer request, or an organisation's bulk order. */
+  kind: "single" | "bulk";
+  /** Organisation placing the bulk order. */
+  orgName: string;
+  /** When the organisation needs delivery. */
+  deadline: string;
+  /** Where the order must be delivered. */
+  deliverTo: string;
 };
+
 
 
 export const emptyDraft: Draft = {
