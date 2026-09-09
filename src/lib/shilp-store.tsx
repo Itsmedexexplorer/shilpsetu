@@ -432,7 +432,56 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
         } catch {
           /* storage unavailable */
         }
-        setSession(initialSession);
+        setSession((s) => ({ ...initialSession, language: s.language }));
+      },
+      useAccount: (id) => {
+        const acc = accounts.find((a) => a.id === id);
+        if (acc)
+          setSession((s) => ({
+            ...s,
+            accountId: acc.id,
+            role: acc.role,
+            profile: { ...emptyProfile, ...acc.profile },
+            draft: emptyDraft,
+          }));
+        return acc;
+      },
+      createAccount: (role) => {
+        const id = `a${Date.now()}`;
+        setAccounts((list) => [
+          ...list,
+          { id, role, profile: emptyProfile, demo: false, createdAt: Date.now() },
+        ]);
+        setSession((s) => ({
+          ...s,
+          accountId: id,
+          role,
+          profile: emptyProfile,
+          draft: emptyDraft,
+        }));
+        return id;
+      },
+      startDemo: (id) => {
+        const seed = DEMO_ACCOUNTS.find((d) => d.id === id);
+        if (!seed) return undefined;
+        const existing = accounts.find((a) => a.id === id);
+        const acc: Account = existing ?? { ...seed, createdAt: Date.now() };
+        if (!existing) setAccounts((list) => [...list, acc]);
+        setSession((s) => ({
+          ...s,
+          accountId: acc.id,
+          role: acc.role,
+          profile: { ...emptyProfile, ...acc.profile },
+          draft: emptyDraft,
+        }));
+        return acc;
+      },
+      switchRole: (role) => setSession((s) => ({ ...s, role })),
+      removeAccount: (id) => {
+        setAccounts((list) => list.filter((a) => a.id !== id));
+        setSession((s) =>
+          s.accountId === id ? { ...initialSession, language: s.language } : s,
+        );
       },
       setInquiryStatus: (id, status) =>
         setMarket((m) => ({
