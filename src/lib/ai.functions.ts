@@ -309,7 +309,9 @@ Write verdict, reasons and replyText in ${langName}. Write numbers as plain digi
 
     const parsed = JSON.parse(raw) as Partial<CoachResult>;
     const digits = (v: unknown, fallback: string) => {
-      const n = String(v ?? "").replace(/[^\d]/g, "");
+      // Models sometimes answer "₹1,000 (about 20% off)" — keep the first number only.
+      const match = /\d[\d,]*/.exec(String(v ?? ""));
+      const n = match ? match[0].replace(/,/g, "") : "";
       return n || fallback;
     };
     return {
