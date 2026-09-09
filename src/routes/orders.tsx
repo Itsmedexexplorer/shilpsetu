@@ -52,7 +52,7 @@ function OrdersScreen() {
         </div>
       </header>
 
-      <div className="mt-5 space-y-3 px-5 pb-32">
+      <div className="mt-5 space-y-3 px-5 pb-[calc(8rem+env(safe-area-inset-bottom))]">
         {list.length === 0 ? (
           <Empty
             title={t("orders.emptyTitle")}

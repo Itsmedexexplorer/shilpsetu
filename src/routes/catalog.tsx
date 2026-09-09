@@ -67,7 +67,7 @@ function CatalogScreen() {
         </div>
       </header>
 
-      <div className="mt-5 space-y-4 px-5 pb-36">
+      <div className="mt-5 space-y-4 px-5 pb-[calc(9rem+env(safe-area-inset-bottom))]">
         {list.length === 0 ? (
           <Empty
             title={t("catalog.emptyTitle")}
@@ -109,7 +109,7 @@ function CatalogScreen() {
           resetDraft();
           navigate({ to: "/capture" });
         }}
-        className="press fixed right-6 bottom-28 z-30 flex h-14 items-center gap-2 rounded-full bg-terracotta px-6 font-extrabold text-white shadow-[0_16px_36px_-12px_rgba(0,0,0,.6)] lg:absolute"
+        className="press fixed right-6 bottom-[calc(7rem+env(safe-area-inset-bottom))] z-30 flex h-14 items-center gap-2 rounded-full bg-terracotta px-6 font-extrabold text-white shadow-[0_16px_36px_-12px_rgba(0,0,0,.6)] lg:absolute"
       >
         <Plus size={20} /> {t("catalog.addNew")}
       </button>
