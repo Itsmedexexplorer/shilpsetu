@@ -95,6 +95,42 @@ const en: Dict = {
   "logout.done": "You are logged out",
   "logout.doneBody": "See you soon. Your craft is always welcome here.",
   "logout.back": "Start again",
+
+  "setup.step": "Step 3 of 3",
+  "setup.title": "Tell us about you",
+  "setup.sub": "This appears on your listings so buyers know who they are talking to.",
+  "setup.name": "Your name",
+  "setup.namePh": "e.g. Savitri Devi",
+  "setup.age": "Your age",
+  "setup.agePh": "e.g. 34",
+  "setup.location": "Village / City, State",
+  "setup.locationPh": "e.g. Bhuj, Gujarat",
+  "setup.craft": "Your craft",
+  "setup.craftPh": "e.g. Pottery, Weaving",
+  "setup.note": "Only your name is required. You can change all of this later.",
+
+  "nav.explore": "Explore",
+  "nav.inquiries": "My inquiries",
+
+  "market.title": "Handmade, straight from the maker",
+  "market.sub": "Browse live listings and contact the artisan directly.",
+  "market.search": "Search craft, material or place",
+  "market.anArtisan": "A SHILPSETU artisan",
+  "market.emptyTitle": "No listings yet",
+  "market.emptyBody":
+    "When an artisan publishes a craft on this device, it shows up here.",
+
+  "orders.sentTitle": "My inquiries",
+  "orders.sentSub": "Everything you have asked artisans about.",
+  "orders.sentEmptyTitle": "No inquiries yet",
+  "orders.sentEmptyBody": "Open any listing and tap Contact Artisan to start.",
+  "orders.viewProduct": "View product",
+
+  "profile.noName": "Add your name",
+  "profile.addDetails": "Add your age and location",
+  "profile.edit": "Edit details",
+  "profile.years": "years",
+  "profile.sent": "inquiries sent",
 };
 
 const hi: Dict = {
