@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { BookOpen, Camera, IndianRupee, LayoutGrid, Plus } from "lucide-react";
+import { useEffect } from "react";
 import { BottomNav } from "@/components/shilp/BottomNav";
 import { Empty, Motif, StatusChip } from "@/components/shilp/ui";
 import { useT } from "@/lib/i18n";
@@ -25,9 +26,16 @@ export const Route = createFileRoute("/home")({
 });
 
 function HomeScreen() {
-  const { artisanName, products, resetDraft } = useShilp();
+  const { artisanName, myProducts: products, resetDraft, role, ready } = useShilp();
   const t = useT();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (ready && (role === "buyer" || role === "org")) {
+      navigate({ to: "/market", replace: true });
+    }
+  }, [ready, role, navigate]);
+
 
   const startNew = () => {
     resetDraft();

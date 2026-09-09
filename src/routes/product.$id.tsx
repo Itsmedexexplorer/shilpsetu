@@ -29,7 +29,7 @@ export const Route = createFileRoute("/product/$id")({
 
 function BuyerView() {
   const { id } = Route.useParams();
-  const { products, artisanName } = useShilp();
+  const { products, role } = useShilp();
   const navigate = useNavigate();
   const [qr, setQr] = useState(false);
   const p = products.find((x) => x.id === id);
