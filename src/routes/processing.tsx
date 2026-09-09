@@ -1,9 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Screen } from "@/components/shilp/ui";
+import { analyzeProduct } from "@/lib/ai.functions";
 import { generateListing, PIPELINE } from "@/lib/ai-demo";
 import { useShilp } from "@/lib/shilp-store";
+
 
 export const Route = createFileRoute("/processing")({
   head: () => ({
@@ -20,24 +23,60 @@ export const Route = createFileRoute("/processing")({
   component: ProcessingScreen,
 });
 
+async function toDataUrl(src: string | null): Promise<string | undefined> {
+  if (!src) return undefined;
+  if (src.startsWith("data:")) return src;
+  try {
+    const blob = await fetch(src).then((r) => r.blob());
+    return await new Promise<string>((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(String(r.result));
+      r.onerror = () => reject(new Error("read failed"));
+      r.readAsDataURL(blob);
+    });
+  } catch {
+    return undefined;
+  }
+}
+
 function ProcessingScreen() {
-  const { draft, patchDraft } = useShilp();
+  const { draft, patchDraft, language } = useShilp();
   const navigate = useNavigate();
+  const analyze = useServerFn(analyzeProduct);
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    const timers = PIPELINE.map((_, i) => setTimeout(() => setStep(i + 1), 550 * (i + 1)));
-    const done = setTimeout(() => {
-      const g = generateListing(draft.transcript);
+    let cancelled = false;
+    const timers = PIPELINE.map((_, i) =>
+      setTimeout(() => setStep(i + 1), 550 * (i + 1)),
+    );
+
+    const minWait = new Promise((r) => setTimeout(r, 550 * PIPELINE.length));
+    const work = (async () => {
+      try {
+        const image = await toDataUrl(draft.photo);
+        return await analyze({
+          data: { image, transcript: draft.transcript, language: language ?? "en" },
+        });
+      } catch {
+        return generateListing(draft.transcript);
+      }
+    })();
+
+    void Promise.all([work, minWait]).then(([g]) => {
+      if (cancelled) return;
+      setStep(PIPELINE.length);
       patchDraft(g);
       navigate({ to: "/listing" });
-    }, 550 * PIPELINE.length + 500);
+    });
+
     return () => {
+      cancelled = true;
       timers.forEach(clearTimeout);
-      clearTimeout(done);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   return (
     <Screen tone="forest">

@@ -99,7 +99,7 @@ function ProfileScreen() {
         </Link>
       </div>
 
-      <section className="mt-6 px-5 pb-32">
+      <section className="mt-6 px-5 pb-[calc(8rem+env(safe-area-inset-bottom))]">
         <div className="rounded-3xl bg-sand p-5">
           <div className="flex items-center gap-2">
             <Info size={18} className="text-forest" />

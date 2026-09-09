@@ -73,7 +73,7 @@ function HomeScreen() {
         <Tile to="/profile" Icon={BookOpen} label={t("home.learn")} tone="forest" />
       </div>
 
-      <section className="mt-8 px-5 pb-32">
+      <section className="mt-8 px-5 pb-[calc(8rem+env(safe-area-inset-bottom))]">
         <div className="mb-3 flex items-end justify-between">
           <h2 className="text-xl font-extrabold">{t("home.recent")}</h2>
           <Link to="/catalog" className="text-sm font-bold text-terracotta">
