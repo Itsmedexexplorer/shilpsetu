@@ -240,7 +240,7 @@ type Ctx = Session &
     /** Sign in as a saved identity. */
     useAccount: (id: string) => Account | undefined;
     /** Start a fresh empty identity with the chosen role. */
-    createAccount: (role: Role) => string;
+    createAccount: (role: Role, profile?: Profile) => string;
     /** Load one of the ready-made demo identities. */
     startDemo: (id: string) => Account | undefined;
     /** Same person, different side of the market. */
@@ -446,18 +446,19 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
           }));
         return acc;
       },
-      createAccount: (role) => {
+      createAccount: (role, profile) => {
         const id = `a${Date.now()}`;
+        const p = { ...emptyProfile, ...(profile ?? {}) };
         setAccounts((list) => [
           ...list,
-          { id, role, profile: emptyProfile, demo: false, createdAt: Date.now() },
+          { id, role, profile: p, demo: false, createdAt: Date.now() },
         ]);
         setSession((s) => ({
           ...s,
           accountId: id,
           role,
-          profile: emptyProfile,
-          draft: emptyDraft,
+          profile: p,
+          draft: profile ? s.draft : emptyDraft,
         }));
         return id;
       },
