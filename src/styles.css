@@ -4,6 +4,22 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-display: "Bricolage Grotesque", "Noto Sans Devanagari", sans-serif;
+  --font-sans: "Karla", "Noto Sans Devanagari", sans-serif;
+  --color-forest: oklch(0.29 0.055 158);
+  --color-forest-deep: oklch(0.21 0.045 158);
+  --color-forest-soft: oklch(0.42 0.06 158);
+  --color-terracotta: oklch(0.62 0.15 42);
+  --color-terracotta-deep: oklch(0.52 0.14 38);
+  --color-ivory: oklch(0.968 0.014 85);
+  --color-sand: oklch(0.925 0.026 80);
+  --color-charcoal: oklch(0.24 0.012 60);
+  --color-sage: oklch(0.74 0.035 150);
+  --color-saffron: oklch(0.82 0.14 82);
+}
+
+
 /*
  * Design system definition.
  *
@@ -62,26 +78,27 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --radius: 0.9rem;
+  --background: oklch(0.968 0.014 85);
+  --foreground: oklch(0.24 0.012 60);
+  --card: oklch(0.99 0.008 85);
+  --card-foreground: oklch(0.24 0.012 60);
+  --popover: oklch(0.99 0.008 85);
+  --popover-foreground: oklch(0.24 0.012 60);
+  --primary: oklch(0.62 0.15 42);
+  --primary-foreground: oklch(0.985 0.01 85);
+  --secondary: oklch(0.925 0.026 80);
+  --secondary-foreground: oklch(0.29 0.055 158);
+  --muted: oklch(0.925 0.026 80);
+  --muted-foreground: oklch(0.48 0.02 70);
+  --accent: oklch(0.29 0.055 158);
+  --accent-foreground: oklch(0.968 0.014 85);
+  --destructive: oklch(0.55 0.2 27);
+  --destructive-foreground: oklch(0.985 0.01 85);
+  --border: oklch(0.87 0.022 80);
+  --input: oklch(0.87 0.022 80);
+  --ring: oklch(0.62 0.15 42);
+
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -140,5 +157,95 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+  }
+}
+
+/* --- SHILPSETU craft layer --- */
+@utility paper-grain {
+  position: relative;
+}
+
+@utility craft-texture {
+  background-image:
+    radial-gradient(circle at 20% 30%, color-mix(in oklab, var(--color-terracotta) 8%, transparent) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 60%, color-mix(in oklab, var(--color-forest) 7%, transparent) 0 2px, transparent 3px);
+  background-size: 26px 26px, 34px 34px;
+}
+
+@utility motif-band {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--color-saffron) 55%, transparent) 0 6px,
+    transparent 6px 14px
+  );
+}
+
+@layer base {
+  html,
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+@keyframes bar-dance {
+  0%,
+  100% {
+    transform: scaleY(0.25);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+@keyframes sheen {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@utility animate-rise {
+  animation: rise-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@utility animate-ring {
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+@utility animate-bar {
+  animation: bar-dance 0.9s ease-in-out infinite;
+}
+@utility press {
+  transition:
+    transform 0.14s ease,
+    filter 0.14s ease;
+  &:active {
+    transform: scale(0.97);
   }
 }

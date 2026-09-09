@@ -1,0 +1,112 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import { BottomNav } from "@/components/shilp/BottomNav";
+import { Empty, Motif, StatusChip } from "@/components/shilp/ui";
+import { rupees, useShilp } from "@/lib/shilp-store";
+
+export const Route = createFileRoute("/catalog")({
+  head: () => ({
+    meta: [
+      { title: "My Catalog — SHILPSETU AI" },
+      {
+        name: "description",
+        content: "Your own digital storefront: published listings and drafts in one place.",
+      },
+      { property: "og:title", content: "My Catalog" },
+      { property: "og:description", content: "Every craft you have listed so far." },
+    ],
+  }),
+  component: CatalogScreen,
+});
+
+const filters = ["All", "Published", "Drafts"] as const;
+
+function CatalogScreen() {
+  const { products, resetDraft } = useShilp();
+  const navigate = useNavigate();
+  const [filter, setFilter] = useState<(typeof filters)[number]>("All");
+
+  const list = products.filter((p) =>
+    filter === "All"
+      ? true
+      : filter === "Published"
+        ? p.status === "published"
+        : p.status === "draft",
+  );
+
+  return (
+    <div className="relative flex min-h-full flex-1 flex-col bg-ivory">
+      <header className="px-5 pt-8">
+        <Motif className="mb-4" />
+        <h1 className="text-[2.2rem] font-extrabold">My Catalog</h1>
+        <p className="mt-1 text-sm opacity-65">
+          {products.length} {products.length === 1 ? "product" : "products"}
+        </p>
+
+        <div className="mt-5 flex gap-2">
+          {filters.map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`press rounded-full px-4 py-2 text-sm font-bold ${
+                filter === f ? "bg-forest text-ivory" : "bg-sand text-charcoal/70"
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+      </header>
+
+      <div className="mt-5 space-y-4 px-5 pb-28">
+        {list.length === 0 ? (
+          <Empty
+            title="No products here yet"
+            body="Add your first craft — a photo and a short voice note is all it takes."
+          />
+        ) : (
+          list.map((p, i) => (
+            <Link
+              key={p.id}
+              to="/product/$id"
+              params={{ id: p.id }}
+              style={{ animation: `rise-in .4s ${0.05 * i}s both` }}
+              className="press block overflow-hidden rounded-3xl bg-white ring-1 ring-charcoal/8"
+            >
+              {p.image ? (
+                <img
+                  src={p.image}
+                  alt={p.title}
+                  loading="lazy"
+                  className="aspect-[16/10] w-full object-cover"
+                />
+              ) : (
+                <div className="aspect-[16/10] w-full bg-sand" />
+              )}
+              <div className="flex items-center gap-3 p-4">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-lg font-extrabold">{p.title}</p>
+                  <p className="font-bold text-terracotta">{rupees(p.price)}</p>
+                </div>
+                <StatusChip status={p.status} />
+              </div>
+            </Link>
+          ))
+        )}
+      </div>
+
+      <button
+        onClick={() => {
+          resetDraft();
+          navigate({ to: "/capture" });
+        }}
+        className="press fixed right-6 bottom-24 z-30 flex h-14 items-center gap-2 rounded-full bg-terracotta px-6 font-extrabold text-white shadow-[0_16px_36px_-12px_rgba(0,0,0,.6)] lg:absolute"
+      >
+        <Plus size={20} /> Add New
+      </button>
+
+      <BottomNav />
+    </div>
+  );
+}

@@ -10,33 +10,284 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CaptureRouteImport } from './routes/capture'
+import { Route as CatalogRouteImport } from './routes/catalog'
+import { Route as CostsRouteImport } from './routes/costs'
+import { Route as EditRouteImport } from './routes/edit'
+import { Route as HomeRouteImport } from './routes/home'
+import { Route as LanguageRouteImport } from './routes/language'
+import { Route as ListingRouteImport } from './routes/listing'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as PriceRouteImport } from './routes/price'
+import { Route as ProcessingRouteImport } from './routes/processing'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PublishedRouteImport } from './routes/published'
+import { Route as ReviewRouteImport } from './routes/review'
+import { Route as RoleRouteImport } from './routes/role'
+import { Route as StudioRouteImport } from './routes/studio'
+import { Route as VoiceRouteImport } from './routes/voice'
+import { Route as InquiryIdRouteImport } from './routes/inquiry.$id'
+import { Route as ProductIdRouteImport } from './routes/product.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CaptureRoute = CaptureRouteImport.update({
+  id: '/capture',
+  path: '/capture',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CatalogRoute = CatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CostsRoute = CostsRouteImport.update({
+  id: '/costs',
+  path: '/costs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditRoute = EditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LanguageRoute = LanguageRouteImport.update({
+  id: '/language',
+  path: '/language',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListingRoute = ListingRouteImport.update({
+  id: '/listing',
+  path: '/listing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PriceRoute = PriceRouteImport.update({
+  id: '/price',
+  path: '/price',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProcessingRoute = ProcessingRouteImport.update({
+  id: '/processing',
+  path: '/processing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublishedRoute = PublishedRouteImport.update({
+  id: '/published',
+  path: '/published',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReviewRoute = ReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoleRoute = RoleRouteImport.update({
+  id: '/role',
+  path: '/role',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudioRoute = StudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VoiceRoute = VoiceRouteImport.update({
+  id: '/voice',
+  path: '/voice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InquiryIdRoute = InquiryIdRouteImport.update({
+  id: '/inquiry/$id',
+  path: '/inquiry/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductIdRoute = ProductIdRouteImport.update({
+  id: '/product/$id',
+  path: '/product/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/capture': typeof CaptureRoute
+  '/catalog': typeof CatalogRoute
+  '/costs': typeof CostsRoute
+  '/edit': typeof EditRoute
+  '/home': typeof HomeRoute
+  '/language': typeof LanguageRoute
+  '/listing': typeof ListingRoute
+  '/onboarding': typeof OnboardingRoute
+  '/orders': typeof OrdersRoute
+  '/price': typeof PriceRoute
+  '/processing': typeof ProcessingRoute
+  '/profile': typeof ProfileRoute
+  '/published': typeof PublishedRoute
+  '/review': typeof ReviewRoute
+  '/role': typeof RoleRoute
+  '/studio': typeof StudioRoute
+  '/voice': typeof VoiceRoute
+  '/inquiry/$id': typeof InquiryIdRoute
+  '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/capture': typeof CaptureRoute
+  '/catalog': typeof CatalogRoute
+  '/costs': typeof CostsRoute
+  '/edit': typeof EditRoute
+  '/home': typeof HomeRoute
+  '/language': typeof LanguageRoute
+  '/listing': typeof ListingRoute
+  '/onboarding': typeof OnboardingRoute
+  '/orders': typeof OrdersRoute
+  '/price': typeof PriceRoute
+  '/processing': typeof ProcessingRoute
+  '/profile': typeof ProfileRoute
+  '/published': typeof PublishedRoute
+  '/review': typeof ReviewRoute
+  '/role': typeof RoleRoute
+  '/studio': typeof StudioRoute
+  '/voice': typeof VoiceRoute
+  '/inquiry/$id': typeof InquiryIdRoute
+  '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/capture': typeof CaptureRoute
+  '/catalog': typeof CatalogRoute
+  '/costs': typeof CostsRoute
+  '/edit': typeof EditRoute
+  '/home': typeof HomeRoute
+  '/language': typeof LanguageRoute
+  '/listing': typeof ListingRoute
+  '/onboarding': typeof OnboardingRoute
+  '/orders': typeof OrdersRoute
+  '/price': typeof PriceRoute
+  '/processing': typeof ProcessingRoute
+  '/profile': typeof ProfileRoute
+  '/published': typeof PublishedRoute
+  '/review': typeof ReviewRoute
+  '/role': typeof RoleRoute
+  '/studio': typeof StudioRoute
+  '/voice': typeof VoiceRoute
+  '/inquiry/$id': typeof InquiryIdRoute
+  '/product/$id': typeof ProductIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/capture'
+    | '/catalog'
+    | '/costs'
+    | '/edit'
+    | '/home'
+    | '/language'
+    | '/listing'
+    | '/onboarding'
+    | '/orders'
+    | '/price'
+    | '/processing'
+    | '/profile'
+    | '/published'
+    | '/review'
+    | '/role'
+    | '/studio'
+    | '/voice'
+    | '/inquiry/$id'
+    | '/product/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/capture'
+    | '/catalog'
+    | '/costs'
+    | '/edit'
+    | '/home'
+    | '/language'
+    | '/listing'
+    | '/onboarding'
+    | '/orders'
+    | '/price'
+    | '/processing'
+    | '/profile'
+    | '/published'
+    | '/review'
+    | '/role'
+    | '/studio'
+    | '/voice'
+    | '/inquiry/$id'
+    | '/product/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/capture'
+    | '/catalog'
+    | '/costs'
+    | '/edit'
+    | '/home'
+    | '/language'
+    | '/listing'
+    | '/onboarding'
+    | '/orders'
+    | '/price'
+    | '/processing'
+    | '/profile'
+    | '/published'
+    | '/review'
+    | '/role'
+    | '/studio'
+    | '/voice'
+    | '/inquiry/$id'
+    | '/product/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CaptureRoute: typeof CaptureRoute
+  CatalogRoute: typeof CatalogRoute
+  CostsRoute: typeof CostsRoute
+  EditRoute: typeof EditRoute
+  HomeRoute: typeof HomeRoute
+  LanguageRoute: typeof LanguageRoute
+  ListingRoute: typeof ListingRoute
+  OnboardingRoute: typeof OnboardingRoute
+  OrdersRoute: typeof OrdersRoute
+  PriceRoute: typeof PriceRoute
+  ProcessingRoute: typeof ProcessingRoute
+  ProfileRoute: typeof ProfileRoute
+  PublishedRoute: typeof PublishedRoute
+  ReviewRoute: typeof ReviewRoute
+  RoleRoute: typeof RoleRoute
+  StudioRoute: typeof StudioRoute
+  VoiceRoute: typeof VoiceRoute
+  InquiryIdRoute: typeof InquiryIdRoute
+  ProductIdRoute: typeof ProductIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +299,163 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/capture': {
+      id: '/capture'
+      path: '/capture'
+      fullPath: '/capture'
+      preLoaderRoute: typeof CaptureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/catalog': {
+      id: '/catalog'
+      path: '/catalog'
+      fullPath: '/catalog'
+      preLoaderRoute: typeof CatalogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/costs': {
+      id: '/costs'
+      path: '/costs'
+      fullPath: '/costs'
+      preLoaderRoute: typeof CostsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/edit': {
+      id: '/edit'
+      path: '/edit'
+      fullPath: '/edit'
+      preLoaderRoute: typeof EditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/language': {
+      id: '/language'
+      path: '/language'
+      fullPath: '/language'
+      preLoaderRoute: typeof LanguageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/listing': {
+      id: '/listing'
+      path: '/listing'
+      fullPath: '/listing'
+      preLoaderRoute: typeof ListingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/price': {
+      id: '/price'
+      path: '/price'
+      fullPath: '/price'
+      preLoaderRoute: typeof PriceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/processing': {
+      id: '/processing'
+      path: '/processing'
+      fullPath: '/processing'
+      preLoaderRoute: typeof ProcessingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/published': {
+      id: '/published'
+      path: '/published'
+      fullPath: '/published'
+      preLoaderRoute: typeof PublishedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/review': {
+      id: '/review'
+      path: '/review'
+      fullPath: '/review'
+      preLoaderRoute: typeof ReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/role': {
+      id: '/role'
+      path: '/role'
+      fullPath: '/role'
+      preLoaderRoute: typeof RoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/studio': {
+      id: '/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof StudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/voice': {
+      id: '/voice'
+      path: '/voice'
+      fullPath: '/voice'
+      preLoaderRoute: typeof VoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inquiry/$id': {
+      id: '/inquiry/$id'
+      path: '/inquiry/$id'
+      fullPath: '/inquiry/$id'
+      preLoaderRoute: typeof InquiryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/product/$id': {
+      id: '/product/$id'
+      path: '/product/$id'
+      fullPath: '/product/$id'
+      preLoaderRoute: typeof ProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CaptureRoute: CaptureRoute,
+  CatalogRoute: CatalogRoute,
+  CostsRoute: CostsRoute,
+  EditRoute: EditRoute,
+  HomeRoute: HomeRoute,
+  LanguageRoute: LanguageRoute,
+  ListingRoute: ListingRoute,
+  OnboardingRoute: OnboardingRoute,
+  OrdersRoute: OrdersRoute,
+  PriceRoute: PriceRoute,
+  ProcessingRoute: ProcessingRoute,
+  ProfileRoute: ProfileRoute,
+  PublishedRoute: PublishedRoute,
+  ReviewRoute: ReviewRoute,
+  RoleRoute: RoleRoute,
+  StudioRoute: StudioRoute,
+  VoiceRoute: VoiceRoute,
+  InquiryIdRoute: InquiryIdRoute,
+  ProductIdRoute: ProductIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
