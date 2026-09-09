@@ -235,15 +235,29 @@ type Ctx = Session &
     /** Both sides settle on a final price. */
     acceptOffer: (id: string, price: string) => void;
     signOut: () => void;
+    /** Every identity saved on this device. */
+    accounts: Account[];
+    /** Sign in as a saved identity. */
+    useAccount: (id: string) => Account | undefined;
+    /** Start a fresh empty identity with the chosen role. */
+    createAccount: (role: Role) => string;
+    /** Load one of the ready-made demo identities. */
+    startDemo: (id: string) => Account | undefined;
+    /** Same person, different side of the market. */
+    switchRole: (role: Role) => void;
+    /** Forget a saved identity on this device. */
+    removeAccount: (id: string) => void;
   };
 
 const StoreContext = createContext<Ctx | null>(null);
 const SESSION_KEY = "shilpsetu.session.v2";
 const MARKET_KEY = "shilpsetu.market.v2";
+const ACCOUNTS_KEY = "shilpsetu.accounts.v1";
 
 export function ShilpProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session>(initialSession);
   const [market, setMarket] = useState<Market>(initialMarket);
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
