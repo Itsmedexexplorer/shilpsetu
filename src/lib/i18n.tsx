@@ -189,7 +189,38 @@ const en: Dict = {
   "product.makeOffer": "Make an offer",
   "inquiry.offerLabel": "Your price (optional)",
   "inquiry.offerHint": "Add a price and the bargain coach opens up.",
+  "inquiry.coachReady":
+    "After you send, the AI coach opens with a fair price, a floor and a ready reply.",
+  "inquiry.coachLocked": "Type the price you want and the coach unlocks.",
+
+  "orders.bulk": "Bulk order",
+  "orders.by": "Needed by",
+  "bulk.cta": "Request bulk order",
+  "bulk.top": "Organisation order",
+  "bulk.title": "Order this craft in quantity",
+  "bulk.perPiece": "per piece",
+  "bulk.org": "Organisation name",
+  "bulk.orgPh": "e.g. Craft Council of India",
+  "bulk.person": "Contact person",
+  "bulk.contact": "Phone / Email",
+  "bulk.qty": "How many pieces",
+  "bulk.unit": "Your price per piece (optional)",
+  "bulk.unitHint": "Add one and the bargain coach opens up.",
+  "bulk.total": "Order value",
+  "bulk.deadline": "Needed by",
+  "bulk.deadlinePh": "e.g. 20 Oct 2026",
+  "bulk.deliverTo": "Deliver to",
+  "bulk.deliverToPh": "e.g. Delhi, India",
+  "bulk.notes": "Requirements",
+  "bulk.note":
+    "No payment happens here. The artisan confirms the quantity and price with you directly.",
+  "bulk.send": "Send bulk order",
+  "bulk.sentTitle": "Bulk order sent.",
+  "bulk.sentBody": "The artisan sees the quantity, your price and the delivery date.",
+  "bulk.seeOrders": "See my orders",
+  "bulk.keepBrowsing": "Keep browsing crafts",
 };
+
 
 const hi: Dict = {
   "app.tagline": "60 सेकंड में शिल्प से बाज़ार तक।",
