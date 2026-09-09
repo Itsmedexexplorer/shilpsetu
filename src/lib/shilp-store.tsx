@@ -512,7 +512,7 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
           ),
         })),
     };
-  }, [session, market, ready]);
+  }, [session, market, accounts, ready]);
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 }
