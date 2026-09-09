@@ -21,10 +21,15 @@ export const Route = createFileRoute("/inquiry/$id")({
 
 function InquiryScreen() {
   const { id } = Route.useParams();
-  const { products, addInquiry } = useShilp();
+  const { products, addInquiry, profile } = useShilp();
   const navigate = useNavigate();
   const product = products.find((p) => p.id === id);
-  const [form, setForm] = useState({ name: "", contact: "", qty: "1", message: "" });
+  const [form, setForm] = useState({
+    name: profile.name,
+    contact: "",
+    qty: "1",
+    message: "",
+  });
   const [sent, setSent] = useState(false);
 
   const valid = form.name.trim() && form.contact.trim();

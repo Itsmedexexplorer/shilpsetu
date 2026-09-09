@@ -74,7 +74,7 @@ function RoleScreen() {
         <Btn
           disabled={!role}
           className={!role ? "opacity-40" : ""}
-          onClick={() => navigate({ to: "/home" })}
+          onClick={() => navigate({ to: "/setup" })}
         >
           {t("common.continue")}
         </Btn>

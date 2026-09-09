@@ -29,7 +29,7 @@ const filterKey = {
 } as const;
 
 function CatalogScreen() {
-  const { products, resetDraft } = useShilp();
+  const { myProducts: products, resetDraft } = useShilp();
   const t = useT();
   const navigate = useNavigate();
   const [filter, setFilter] = useState<(typeof filters)[number]>("All");
