@@ -210,7 +210,12 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
           offerPrice: i.offerPrice ?? "",
           agreedPrice: i.agreedPrice ?? "",
           offers: Array.isArray(i.offers) ? i.offers : [],
+          kind: i.kind ?? "single",
+          orgName: i.orgName ?? "",
+          deadline: i.deadline ?? "",
+          deliverTo: i.deliverTo ?? "",
         }));
+
         setMarket(parsedMarket);
       }
     } catch {
