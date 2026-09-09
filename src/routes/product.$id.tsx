@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, QrCode, Share2 } from "lucide-react";
+import { ArrowLeft, Copy, QrCode, Share2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import artisanImg from "@/assets/artisan-hero.jpg";
 import demoAfter from "@/assets/vase-after.jpg";
 import { Btn } from "@/components/shilp/ui";
+import { prettyUrl, productUrl, qrUrl } from "@/lib/share";
 import { rupees, useShilp } from "@/lib/shilp-store";
 
 export const Route = createFileRoute("/product/$id")({
@@ -45,16 +46,34 @@ function BuyerView() {
     );
   }
 
-  const url = typeof window !== "undefined" ? window.location.href : "";
+  const url = productUrl(p.id);
+
+  const copy = () => {
+    navigator.clipboard?.writeText(url);
+    toast.success("Live link copied");
+  };
+
+  const share = async () => {
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({ title: p.title, text: p.description, url });
+        return;
+      } catch {
+        /* user dismissed */
+      }
+    }
+    copy();
+  };
 
   return (
     <div className="flex min-h-full flex-1 flex-col bg-white">
-      <div className="relative">
+      <div className="relative overflow-hidden">
         <img
           src={p.image || demoAfter}
           alt={p.title}
-          className="aspect-[4/5] w-full object-cover"
+          className="animate-zoom aspect-[4/5] w-full object-cover"
         />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/35 to-transparent" />
         <button
           aria-label="Back"
           onClick={() => navigate({ to: "/catalog" })}
@@ -65,10 +84,7 @@ function BuyerView() {
         <div className="absolute top-5 right-5 flex gap-2">
           <button
             aria-label="Share"
-            onClick={() => {
-              navigator.clipboard?.writeText(url);
-              toast.success("Link copied");
-            }}
+            onClick={share}
             className="press grid h-11 w-11 place-items-center rounded-full bg-white/85 text-charcoal backdrop-blur"
           >
             <Share2 size={18} />
@@ -83,7 +99,7 @@ function BuyerView() {
         </div>
       </div>
 
-      <div className="-mt-8 flex-1 rounded-t-[2rem] bg-white px-6 pt-7">
+      <div className="animate-rise -mt-8 flex-1 rounded-t-[2rem] bg-white px-6 pt-7 shadow-[0_-16px_40px_-32px_rgba(0,0,0,.6)]">
         <span className="rounded-full bg-sage/25 px-3 py-1.5 text-xs font-extrabold tracking-wide text-forest uppercase">
           {p.craft || "Handmade"}
         </span>
@@ -102,7 +118,7 @@ function BuyerView() {
             ["Craft", p.craft || "Traditional"],
             ["Availability", "Made to order"],
           ].map(([k, v]) => (
-            <div key={k} className="rounded-2xl bg-ivory p-3">
+            <div key={k} className="lift rounded-2xl bg-ivory p-3">
               <dt className="text-[0.65rem] font-bold tracking-wide uppercase opacity-55">
                 {k}
               </dt>
@@ -111,18 +127,47 @@ function BuyerView() {
           ))}
         </dl>
 
+        <div className="mt-6 rounded-3xl border-2 border-charcoal/10 bg-ivory p-4">
+          <p className="text-[0.65rem] font-bold tracking-[0.14em] uppercase opacity-55">
+            Live page link
+          </p>
+          <div className="mt-2 flex items-center gap-3">
+            <a
+              href={url}
+              target="_blank"
+              rel="noreferrer"
+              className="min-w-0 flex-1 truncate text-sm font-bold text-forest underline underline-offset-4"
+            >
+              {prettyUrl(url)}
+            </a>
+            <button
+              aria-label="Copy link"
+              onClick={copy}
+              className="press grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-charcoal text-white"
+            >
+              <Copy size={16} />
+            </button>
+          </div>
+          <p className="mt-2 text-xs opacity-55">
+            Share this link on WhatsApp — it opens the live buyer page.
+          </p>
+        </div>
+
         {qr ? (
           <div className="animate-rise mt-6 grid place-items-center rounded-3xl bg-ivory p-5">
             <img
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`}
+              src={qrUrl(url, 200)}
               alt="QR code for this listing"
               width={200}
               height={200}
             />
+            <p className="mt-2 text-xs font-semibold opacity-60">
+              Scan to open the live page
+            </p>
           </div>
         ) : null}
 
-        <div className="mt-8 flex gap-4 rounded-3xl bg-forest p-5 text-ivory">
+        <div className="lift mt-8 flex gap-4 rounded-3xl bg-forest p-5 text-ivory">
           <img
             src={artisanImg}
             alt="The artisan"

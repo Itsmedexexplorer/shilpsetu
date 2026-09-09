@@ -38,10 +38,8 @@ function PublishedScreen() {
     return () => clearTimeout(t);
   }, []);
 
-  const url =
-    typeof window !== "undefined" && product
-      ? `${window.location.origin}/product/${product.id}`
-      : "";
+  const url = product ? productUrl(product.id) : "";
+
 
   return (
     <Screen tone="forest">
