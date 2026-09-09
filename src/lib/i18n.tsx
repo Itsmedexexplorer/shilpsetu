@@ -225,6 +225,41 @@ const hi: Dict = {
   "logout.done": "आप लॉग आउट हो गए",
   "logout.doneBody": "फिर मिलते हैं। आपका शिल्प यहाँ हमेशा स्वागत योग्य है।",
   "logout.back": "फिर से शुरू करें",
+
+  "setup.step": "चरण 3 / 3",
+  "setup.title": "अपने बारे में बताइए",
+  "setup.sub": "यह आपकी लिस्टिंग पर दिखेगा ताकि ग्राहक जान सकें कि किससे बात कर रहे हैं।",
+  "setup.name": "आपका नाम",
+  "setup.namePh": "जैसे: सावित्री देवी",
+  "setup.age": "आपकी उम्र",
+  "setup.agePh": "जैसे: 34",
+  "setup.location": "गाँव / शहर, राज्य",
+  "setup.locationPh": "जैसे: भुज, गुजरात",
+  "setup.craft": "आपका शिल्प",
+  "setup.craftPh": "जैसे: मिट्टी का काम, बुनाई",
+  "setup.note": "सिर्फ़ नाम ज़रूरी है। बाक़ी बाद में भी बदल सकते हैं।",
+
+  "nav.explore": "देखें",
+  "nav.inquiries": "मेरी पूछताछ",
+
+  "market.title": "सीधे कारीगर से, हाथ का बना",
+  "market.sub": "लिस्टिंग देखिए और कारीगर से सीधे बात कीजिए।",
+  "market.search": "शिल्प, सामग्री या जगह खोजें",
+  "market.anArtisan": "एक शिल्पसेतु कारीगर",
+  "market.emptyTitle": "अभी कोई लिस्टिंग नहीं",
+  "market.emptyBody": "जब कोई कारीगर इस फ़ोन पर शिल्प प्रकाशित करेगा, वह यहाँ दिखेगा।",
+
+  "orders.sentTitle": "मेरी पूछताछ",
+  "orders.sentSub": "आपने कारीगरों से जो भी पूछा है।",
+  "orders.sentEmptyTitle": "अभी कोई पूछताछ नहीं",
+  "orders.sentEmptyBody": "कोई भी लिस्टिंग खोलिए और ‘कारीगर से संपर्क’ दबाइए।",
+  "orders.viewProduct": "उत्पाद देखें",
+
+  "profile.noName": "अपना नाम जोड़ें",
+  "profile.addDetails": "उम्र और जगह जोड़ें",
+  "profile.edit": "बदलें",
+  "profile.years": "साल",
+  "profile.sent": "पूछताछ भेजी",
 };
 
 const kn: Dict = {
