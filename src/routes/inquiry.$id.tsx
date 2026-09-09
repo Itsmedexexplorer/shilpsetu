@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Check } from "lucide-react";
 import { useState } from "react";
 import { AreaField, Btn, Field, Screen, Title, TopBar } from "@/components/shilp/ui";
+import { useT } from "@/lib/i18n";
 import { useShilp } from "@/lib/shilp-store";
 
 export const Route = createFileRoute("/inquiry/$id")({
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/inquiry/$id")({
 function InquiryScreen() {
   const { id } = Route.useParams();
   const { products, addInquiry, profile, role } = useShilp();
+  const t = useT();
   const navigate = useNavigate();
   const product = products.find((p) => p.id === id);
   const isArtisan = role === "artisan";
@@ -29,14 +31,16 @@ function InquiryScreen() {
     name: profile.name,
     contact: "",
     qty: "1",
+    offer: "",
     message: "",
   });
   const [sent, setSent] = useState(false);
+  const [newId, setNewId] = useState<string | null>(null);
 
   const valid = form.name.trim() && form.contact.trim();
 
   const send = () => {
-    addInquiry({
+    const created = addInquiry({
       buyer: form.name.trim(),
       buyerAvatar: profile.avatar,
       buyerLocation: profile.location,
@@ -44,7 +48,9 @@ function InquiryScreen() {
       productId: id,
       quantity: form.qty || "1",
       message: form.message,
+      offerPrice: form.offer,
     });
+    setNewId(created);
     setSent(true);
   };
 
@@ -60,7 +66,21 @@ function InquiryScreen() {
             They will get back to you on the contact you shared.
           </p>
           <div className="mt-10 w-full space-y-2">
-            <Btn onClick={() => navigate({ to: "/orders" })}>See inquiries</Btn>
+            {newId && form.offer.replace(/[^\d]/g, "") ? (
+              <Btn
+                onClick={() =>
+                  navigate({ to: "/negotiate/$id", params: { id: newId } })
+                }
+              >
+                {t("coach.title")}
+              </Btn>
+            ) : null}
+            <Btn
+              variant={newId && form.offer.replace(/[^\d]/g, "") ? "outline" : "primary"}
+              onClick={() => navigate({ to: "/orders" })}
+            >
+              See inquiries
+            </Btn>
             <Link
               to={isArtisan ? "/catalog" : "/market"}
               className="block py-2 text-sm text-ivory/70 underline"
@@ -72,6 +92,7 @@ function InquiryScreen() {
       </Screen>
     );
   }
+
 
 
   return (
@@ -98,6 +119,15 @@ function InquiryScreen() {
           value={form.qty}
           onChange={(e) => setForm({ ...form, qty: e.target.value })}
         />
+        <Field
+          label={t("inquiry.offerLabel")}
+          hint={t("inquiry.offerHint")}
+          inputMode="numeric"
+          placeholder={product?.price ?? ""}
+          value={form.offer}
+          onChange={(e) => setForm({ ...form, offer: e.target.value })}
+        />
+
         <AreaField
           label="Message"
           value={form.message}

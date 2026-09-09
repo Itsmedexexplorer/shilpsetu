@@ -33,7 +33,10 @@ function OrdersScreen() {
   const [tab, setTab] = useState<Inquiry["status"]>("new");
 
   const source = isBuyer ? sentInquiries : receivedInquiries;
-  const list = isBuyer ? source : source.filter((i) => i.status === tab);
+  // Negotiations sit with new inquiries; settled deals sit with completed ones.
+  const group = (s: Inquiry["status"]) =>
+    s === "negotiating" ? "new" : s === "accepted" ? "completed" : s;
+  const list = isBuyer ? source : source.filter((i) => group(i.status) === tab);
 
   return (
     <div className="flex min-h-full flex-1 flex-col bg-ivory">
@@ -105,12 +108,30 @@ function OrdersScreen() {
                     {rupees(i.productPrice)}
                   </span>
                 ) : null}
+                {i.agreedPrice ? (
+                  <span className="rounded-full bg-forest px-3 py-1 text-ivory">
+                    {t("orders.agreed")} {rupees(i.agreedPrice)}
+                  </span>
+                ) : i.offerPrice ? (
+                  <span className="rounded-full bg-saffron px-3 py-1 text-charcoal">
+                    {t("orders.offered")} {rupees(i.offerPrice)}
+                  </span>
+                ) : null}
                 <span className="rounded-full bg-forest/10 px-3 py-1 text-forest">
                   {t(`orders.${i.status}`)}
                 </span>
               </div>
               {i.message ? (
                 <p className="mt-3 text-sm opacity-75">{i.message}</p>
+              ) : null}
+              {i.offerPrice ? (
+                <Link
+                  to="/negotiate/$id"
+                  params={{ id: i.id }}
+                  className="press mt-3 inline-flex items-center gap-2 rounded-xl bg-saffron px-4 py-2 text-sm font-extrabold text-charcoal"
+                >
+                  ✦ {t("orders.coach")}
+                </Link>
               ) : null}
 
               {isBuyer ? (

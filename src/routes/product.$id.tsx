@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Copy, QrCode, Share2 } from "lucide-react";
+import { ArrowLeft, Copy, Handshake, QrCode, Share2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import demoAfter from "@/assets/vase-after.jpg";
 import { Btn } from "@/components/shilp/ui";
+import { useT } from "@/lib/i18n";
 import { prettyUrl, productUrl, qrUrl } from "@/lib/share";
 import { rupees, useShilp } from "@/lib/shilp-store";
 
@@ -29,6 +30,7 @@ export const Route = createFileRoute("/product/$id")({
 function BuyerView() {
   const { id } = Route.useParams();
   const { products, role } = useShilp();
+  const t = useT();
   const navigate = useNavigate();
   const [qr, setQr] = useState(false);
   const p = products.find((x) => x.id === id);
@@ -209,10 +211,11 @@ function BuyerView() {
           Contact Artisan
         </Btn>
         <Btn
-          variant="outline"
+          variant="forest"
+          icon={<Handshake size={20} />}
           onClick={() => navigate({ to: "/inquiry/$id", params: { id: p.id } })}
         >
-          Bulk Order / Inquiry
+          {t("product.makeOffer")}
         </Btn>
       </div>
     </div>
