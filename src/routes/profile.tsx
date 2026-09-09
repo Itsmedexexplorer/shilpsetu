@@ -10,9 +10,10 @@ import {
   Pencil,
   Store,
 } from "lucide-react";
-import artisanImg from "@/assets/artisan-hero.jpg";
+import { AvatarPicker } from "@/components/shilp/AvatarPicker";
 import { BottomNav } from "@/components/shilp/BottomNav";
 import { Motif } from "@/components/shilp/ui";
+
 import { useT } from "@/lib/i18n";
 import { useShilp } from "@/lib/shilp-store";
 
@@ -32,7 +33,7 @@ export const Route = createFileRoute("/profile")({
 });
 
 function ProfileScreen() {
-  const { profile, myProducts, sentInquiries, role } = useShilp();
+  const { profile, setProfile, myProducts, sentInquiries, role } = useShilp();
   const t = useT();
   const navigate = useNavigate();
   const isBuyer = role === "buyer" || role === "org";
@@ -64,33 +65,44 @@ function ProfileScreen() {
       </header>
 
       <div className="-mt-10 px-5">
-        <div className="flex items-center gap-4 rounded-3xl bg-white p-4 ring-1 ring-charcoal/8">
-          <img
-            src={artisanImg}
-            alt=""
-            loading="lazy"
-            className="h-20 w-20 shrink-0 rounded-2xl object-cover"
-          />
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-xl font-extrabold">
-              {profile.name || t("profile.noName")}
-            </p>
-            <p className="truncate text-sm opacity-65">
-              {[profile.location, profile.age ? `${profile.age} ${t("profile.years")}` : ""]
-                .filter(Boolean)
-                .join(" · ") || t("profile.addDetails")}
-            </p>
-            <p className="mt-1 truncate text-xs font-bold text-terracotta">{line}</p>
+        <div className="rounded-3xl bg-white p-4 ring-1 ring-charcoal/8">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+            <div className="min-w-0">
+              <p className="truncate text-xl font-extrabold">
+                {profile.name || t("profile.noName")}
+              </p>
+              <p className="truncate text-sm opacity-65">
+                {[
+                  profile.location,
+                  profile.age ? `${profile.age} ${t("profile.years")}` : "",
+                ]
+                  .filter(Boolean)
+                  .join(" · ") || t("profile.addDetails")}
+              </p>
+              <p className="mt-1 truncate text-xs font-bold text-terracotta">{line}</p>
+            </div>
+            <button
+              aria-label={t("profile.edit")}
+              onClick={() => navigate({ to: "/setup" })}
+              className="press grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-sand text-forest"
+            >
+              <Pencil size={16} />
+            </button>
           </div>
-          <button
-            aria-label={t("profile.edit")}
-            onClick={() => navigate({ to: "/setup" })}
-            className="press grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-sand text-forest"
-          >
-            <Pencil size={16} />
-          </button>
+
+          <div className="mt-4 border-t border-charcoal/8 pt-4">
+            <AvatarPicker
+              value={profile.avatar}
+              name={profile.name}
+              onChange={(avatar) => setProfile({ avatar })}
+              label={t("profile.changePhoto")}
+              removeLabel={t("profile.removePhoto")}
+              size="sm"
+            />
+          </div>
         </div>
       </div>
+
 
       <div className="mt-5 space-y-2 px-5">
         {rows.map(({ Icon, label, to }) => (

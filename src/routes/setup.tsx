@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { AvatarPicker } from "@/components/shilp/AvatarPicker";
 import { Btn, Field, Screen, Title, TopBar } from "@/components/shilp/ui";
+
 import { useT } from "@/lib/i18n";
 import { useShilp } from "@/lib/shilp-store";
 
@@ -33,12 +35,20 @@ function SetupScreen() {
       <Title sub={t("setup.sub")}>{t("setup.title")}</Title>
 
       <div className="space-y-4 px-5">
+        <AvatarPicker
+          value={profile.avatar}
+          name={profile.name}
+          onChange={(avatar) => setProfile({ avatar })}
+          label={t("profile.changePhoto")}
+          removeLabel={t("profile.removePhoto")}
+        />
         <Field
           label={t("setup.name")}
           placeholder={t("setup.namePh")}
           value={profile.name}
           onChange={(e) => setProfile({ name: e.target.value })}
         />
+
         <Field
           label={t("setup.age")}
           placeholder={t("setup.agePh")}

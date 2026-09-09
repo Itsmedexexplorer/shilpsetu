@@ -21,9 +21,10 @@ export const Route = createFileRoute("/inquiry/$id")({
 
 function InquiryScreen() {
   const { id } = Route.useParams();
-  const { products, addInquiry, profile } = useShilp();
+  const { products, addInquiry, profile, role } = useShilp();
   const navigate = useNavigate();
   const product = products.find((p) => p.id === id);
+  const isArtisan = role === "artisan";
   const [form, setForm] = useState({
     name: profile.name,
     contact: "",
@@ -37,9 +38,10 @@ function InquiryScreen() {
   const send = () => {
     addInquiry({
       buyer: form.name.trim(),
+      buyerAvatar: profile.avatar,
+      buyerLocation: profile.location,
       contact: form.contact.trim(),
       productId: id,
-      productTitle: product?.title ?? "Product",
       quantity: form.qty || "1",
       message: form.message,
     });
@@ -59,14 +61,18 @@ function InquiryScreen() {
           </p>
           <div className="mt-10 w-full space-y-2">
             <Btn onClick={() => navigate({ to: "/orders" })}>See inquiries</Btn>
-            <Link to="/catalog" className="block py-2 text-sm text-ivory/70 underline">
-              Back to catalog
+            <Link
+              to={isArtisan ? "/catalog" : "/market"}
+              className="block py-2 text-sm text-ivory/70 underline"
+            >
+              {isArtisan ? "Back to catalog" : "Keep exploring crafts"}
             </Link>
           </div>
         </div>
       </Screen>
     );
   }
+
 
   return (
     <Screen>

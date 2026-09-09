@@ -37,7 +37,10 @@ export type Profile = {
   age: string;
   location: string;
   craft: string;
+  /** Data-URL profile photo chosen by the person. */
+  avatar: string;
 };
+
 
 export type Product = {
   id: string;
@@ -58,15 +61,20 @@ export type Product = {
 export type Inquiry = {
   id: string;
   buyer: string;
+  buyerAvatar: string;
+  buyerLocation: string;
   contact: string;
   productId: string;
   productTitle: string;
+  productImage: string;
+  productPrice: string;
   sellerName: string;
   quantity: string;
   message: string;
   date: string;
   status: "new" | "contacted" | "completed";
 };
+
 
 export const emptyDraft: Draft = {
   photo: null,
@@ -83,7 +91,14 @@ export const emptyDraft: Draft = {
   price: "",
 };
 
-export const emptyProfile: Profile = { name: "", age: "", location: "", craft: "" };
+export const emptyProfile: Profile = {
+  name: "",
+  age: "",
+  location: "",
+  craft: "",
+  avatar: "",
+};
+
 
 type Session = {
   language: LangCode | null;
@@ -124,8 +139,18 @@ type Ctx = Session &
     resetDraft: () => void;
     publishDraft: (status?: Product["status"]) => Product;
     addInquiry: (
-      i: Omit<Inquiry, "id" | "date" | "status" | "sellerName">,
+      i: Pick<
+        Inquiry,
+        | "buyer"
+        | "buyerAvatar"
+        | "buyerLocation"
+        | "contact"
+        | "productId"
+        | "quantity"
+        | "message"
+      >,
     ) => void;
+
     setInquiryStatus: (id: string, status: Inquiry["status"]) => void;
     signOut: () => void;
   };
@@ -142,7 +167,15 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const s = localStorage.getItem(SESSION_KEY);
-      if (s) setSession({ ...initialSession, ...(JSON.parse(s) as Session) });
+      if (s) {
+        const parsed = JSON.parse(s) as Session;
+        setSession({
+          ...initialSession,
+          ...parsed,
+          profile: { ...emptyProfile, ...(parsed.profile ?? {}) },
+        });
+      }
+
       const m = localStorage.getItem(MARKET_KEY);
       if (m) setMarket({ ...initialMarket, ...(JSON.parse(m) as Market) });
     } catch {
@@ -222,12 +255,16 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
               {
                 ...i,
                 sellerName: product?.seller?.name ?? "",
+                productTitle: product?.title ?? "Product",
+                productImage: product?.image ?? "",
+                productPrice: product?.price ?? "0",
                 id: `i${Date.now()}`,
                 date: new Date().toLocaleDateString("en-IN", {
                   day: "2-digit",
                   month: "short",
                 }),
                 status: "new",
+
               },
               ...m.inquiries,
             ],

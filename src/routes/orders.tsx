@@ -3,7 +3,7 @@ import { useState } from "react";
 import { BottomNav } from "@/components/shilp/BottomNav";
 import { Empty, Motif } from "@/components/shilp/ui";
 import { useT } from "@/lib/i18n";
-import { useShilp, type Inquiry } from "@/lib/shilp-store";
+import { rupees, useShilp, type Inquiry } from "@/lib/shilp-store";
 
 export const Route = createFileRoute("/orders")({
   head: () => ({
@@ -70,15 +70,27 @@ function OrdersScreen() {
         ) : (
           list.map((i) => (
             <div key={i.id} className="rounded-2xl bg-white p-4 ring-1 ring-charcoal/8">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
+              <div className="flex items-start gap-3">
+                {i.productImage || i.buyerAvatar ? (
+                  <img
+                    src={isBuyer ? i.productImage || i.buyerAvatar : i.buyerAvatar || i.productImage}
+                    alt=""
+                    loading="lazy"
+                    className="h-14 w-14 shrink-0 rounded-xl object-cover"
+                  />
+                ) : (
+                  <span className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-sand font-extrabold text-forest">
+                    {(isBuyer ? i.productTitle : i.buyer).charAt(0).toUpperCase()}
+                  </span>
+                )}
+                <div className="min-w-0 flex-1">
                   <p className="truncate text-lg font-extrabold">
                     {isBuyer ? i.productTitle : i.buyer}
                   </p>
                   <p className="truncate text-sm opacity-65">
                     {isBuyer
                       ? i.sellerName || t("market.anArtisan")
-                      : i.productTitle}
+                      : [i.productTitle, i.buyerLocation].filter(Boolean).join(" · ")}
                   </p>
                 </div>
                 <span className="shrink-0 text-xs font-bold opacity-55">{i.date}</span>
@@ -88,15 +100,19 @@ function OrdersScreen() {
                   {t("orders.qty")} {i.quantity}
                 </span>
                 <span className="rounded-full bg-sand px-3 py-1">{i.contact}</span>
-                {isBuyer ? (
-                  <span className="rounded-full bg-forest/10 px-3 py-1 text-forest">
-                    {t(`orders.${i.status}`)}
+                {i.productPrice ? (
+                  <span className="rounded-full bg-terracotta/10 px-3 py-1 text-terracotta">
+                    {rupees(i.productPrice)}
                   </span>
                 ) : null}
+                <span className="rounded-full bg-forest/10 px-3 py-1 text-forest">
+                  {t(`orders.${i.status}`)}
+                </span>
               </div>
               {i.message ? (
                 <p className="mt-3 text-sm opacity-75">{i.message}</p>
               ) : null}
+
               {isBuyer ? (
                 <Link
                   to="/product/$id"
@@ -106,25 +122,35 @@ function OrdersScreen() {
                   {t("orders.viewProduct")}
                 </Link>
               ) : (
-                <div className="mt-4 flex gap-2">
-                  {i.status !== "contacted" ? (
-                    <button
-                      onClick={() => setInquiryStatus(i.id, "contacted")}
-                      className="press rounded-xl bg-forest px-4 py-2 text-sm font-bold text-ivory"
-                    >
-                      {t("orders.markContacted")}
-                    </button>
-                  ) : null}
-                  {i.status !== "completed" ? (
-                    <button
-                      onClick={() => setInquiryStatus(i.id, "completed")}
-                      className="press rounded-xl border-2 border-charcoal/15 px-4 py-2 text-sm font-bold"
-                    >
-                      {t("orders.complete")}
-                    </button>
-                  ) : null}
-                </div>
+                <>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {i.status !== "contacted" ? (
+                      <button
+                        onClick={() => setInquiryStatus(i.id, "contacted")}
+                        className="press rounded-xl bg-forest px-4 py-2 text-sm font-bold text-ivory"
+                      >
+                        {t("orders.markContacted")}
+                      </button>
+                    ) : null}
+                    {i.status !== "completed" ? (
+                      <button
+                        onClick={() => setInquiryStatus(i.id, "completed")}
+                        className="press rounded-xl border-2 border-charcoal/15 px-4 py-2 text-sm font-bold"
+                      >
+                        {t("orders.complete")}
+                      </button>
+                    ) : null}
+                  </div>
+                  <Link
+                    to="/product/$id"
+                    params={{ id: i.productId }}
+                    className="mt-3 inline-block text-sm font-bold text-terracotta"
+                  >
+                    {t("orders.viewProduct")}
+                  </Link>
+                </>
               )}
+
             </div>
           ))
         )}
