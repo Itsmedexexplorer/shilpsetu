@@ -18,6 +18,7 @@ import { Route as HomeRouteImport } from './routes/home'
 import { Route as LanguageRouteImport } from './routes/language'
 import { Route as ListingRouteImport } from './routes/listing'
 import { Route as LogoutRouteImport } from './routes/logout'
+import { Route as MarketRouteImport } from './routes/market'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as PriceRouteImport } from './routes/price'
@@ -26,6 +27,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PublishedRouteImport } from './routes/published'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as RoleRouteImport } from './routes/role'
+import { Route as SetupRouteImport } from './routes/setup'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as VoiceRouteImport } from './routes/voice'
 import { Route as InquiryIdRouteImport } from './routes/inquiry.$id'
@@ -76,6 +78,11 @@ const LogoutRoute = LogoutRouteImport.update({
   path: '/logout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MarketRoute = MarketRouteImport.update({
+  id: '/market',
+  path: '/market',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -116,6 +123,11 @@ const RoleRoute = RoleRouteImport.update({
   path: '/role',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SetupRoute = SetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StudioRoute = StudioRouteImport.update({
   id: '/studio',
   path: '/studio',
@@ -147,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/language': typeof LanguageRoute
   '/listing': typeof ListingRoute
   '/logout': typeof LogoutRoute
+  '/market': typeof MarketRoute
   '/onboarding': typeof OnboardingRoute
   '/orders': typeof OrdersRoute
   '/price': typeof PriceRoute
@@ -155,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/published': typeof PublishedRoute
   '/review': typeof ReviewRoute
   '/role': typeof RoleRoute
+  '/setup': typeof SetupRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
   '/inquiry/$id': typeof InquiryIdRoute
@@ -170,6 +184,7 @@ export interface FileRoutesByTo {
   '/language': typeof LanguageRoute
   '/listing': typeof ListingRoute
   '/logout': typeof LogoutRoute
+  '/market': typeof MarketRoute
   '/onboarding': typeof OnboardingRoute
   '/orders': typeof OrdersRoute
   '/price': typeof PriceRoute
@@ -178,6 +193,7 @@ export interface FileRoutesByTo {
   '/published': typeof PublishedRoute
   '/review': typeof ReviewRoute
   '/role': typeof RoleRoute
+  '/setup': typeof SetupRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
   '/inquiry/$id': typeof InquiryIdRoute
@@ -194,6 +210,7 @@ export interface FileRoutesById {
   '/language': typeof LanguageRoute
   '/listing': typeof ListingRoute
   '/logout': typeof LogoutRoute
+  '/market': typeof MarketRoute
   '/onboarding': typeof OnboardingRoute
   '/orders': typeof OrdersRoute
   '/price': typeof PriceRoute
@@ -202,6 +219,7 @@ export interface FileRoutesById {
   '/published': typeof PublishedRoute
   '/review': typeof ReviewRoute
   '/role': typeof RoleRoute
+  '/setup': typeof SetupRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
   '/inquiry/$id': typeof InquiryIdRoute
@@ -219,6 +237,7 @@ export interface FileRouteTypes {
     | '/language'
     | '/listing'
     | '/logout'
+    | '/market'
     | '/onboarding'
     | '/orders'
     | '/price'
@@ -227,6 +246,7 @@ export interface FileRouteTypes {
     | '/published'
     | '/review'
     | '/role'
+    | '/setup'
     | '/studio'
     | '/voice'
     | '/inquiry/$id'
@@ -242,6 +262,7 @@ export interface FileRouteTypes {
     | '/language'
     | '/listing'
     | '/logout'
+    | '/market'
     | '/onboarding'
     | '/orders'
     | '/price'
@@ -250,6 +271,7 @@ export interface FileRouteTypes {
     | '/published'
     | '/review'
     | '/role'
+    | '/setup'
     | '/studio'
     | '/voice'
     | '/inquiry/$id'
@@ -265,6 +287,7 @@ export interface FileRouteTypes {
     | '/language'
     | '/listing'
     | '/logout'
+    | '/market'
     | '/onboarding'
     | '/orders'
     | '/price'
@@ -273,6 +296,7 @@ export interface FileRouteTypes {
     | '/published'
     | '/review'
     | '/role'
+    | '/setup'
     | '/studio'
     | '/voice'
     | '/inquiry/$id'
@@ -289,6 +313,7 @@ export interface RootRouteChildren {
   LanguageRoute: typeof LanguageRoute
   ListingRoute: typeof ListingRoute
   LogoutRoute: typeof LogoutRoute
+  MarketRoute: typeof MarketRoute
   OnboardingRoute: typeof OnboardingRoute
   OrdersRoute: typeof OrdersRoute
   PriceRoute: typeof PriceRoute
@@ -297,6 +322,7 @@ export interface RootRouteChildren {
   PublishedRoute: typeof PublishedRoute
   ReviewRoute: typeof ReviewRoute
   RoleRoute: typeof RoleRoute
+  SetupRoute: typeof SetupRoute
   StudioRoute: typeof StudioRoute
   VoiceRoute: typeof VoiceRoute
   InquiryIdRoute: typeof InquiryIdRoute
@@ -368,6 +394,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LogoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/market': {
+      id: '/market'
+      path: '/market'
+      fullPath: '/market'
+      preLoaderRoute: typeof MarketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
@@ -424,6 +457,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/setup': {
+      id: '/setup'
+      path: '/setup'
+      fullPath: '/setup'
+      preLoaderRoute: typeof SetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/studio': {
       id: '/studio'
       path: '/studio'
@@ -465,6 +505,7 @@ const rootRouteChildren: RootRouteChildren = {
   LanguageRoute: LanguageRoute,
   ListingRoute: ListingRoute,
   LogoutRoute: LogoutRoute,
+  MarketRoute: MarketRoute,
   OnboardingRoute: OnboardingRoute,
   OrdersRoute: OrdersRoute,
   PriceRoute: PriceRoute,
@@ -473,6 +514,7 @@ const rootRouteChildren: RootRouteChildren = {
   PublishedRoute: PublishedRoute,
   ReviewRoute: ReviewRoute,
   RoleRoute: RoleRoute,
+  SetupRoute: SetupRoute,
   StudioRoute: StudioRoute,
   VoiceRoute: VoiceRoute,
   InquiryIdRoute: InquiryIdRoute,

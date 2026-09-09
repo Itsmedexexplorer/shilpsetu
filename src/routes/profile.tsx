@@ -7,6 +7,8 @@ import {
   LogOut,
   MessageSquare,
   Package,
+  Pencil,
+  Store,
 } from "lucide-react";
 import artisanImg from "@/assets/artisan-hero.jpg";
 import { BottomNav } from "@/components/shilp/BottomNav";
@@ -20,7 +22,7 @@ export const Route = createFileRoute("/profile")({
       { title: "My Profile — SHILPSETU AI" },
       {
         name: "description",
-        content: "Your artisan identity, products, language settings and support.",
+        content: "Your identity, products, language settings and support.",
       },
       { property: "og:title", content: "My Profile" },
       { property: "og:description", content: "Your journey with SHILPSETU AI." },
@@ -30,15 +32,29 @@ export const Route = createFileRoute("/profile")({
 });
 
 function ProfileScreen() {
-  const { artisanName, products } = useShilp();
+  const { profile, myProducts, sentInquiries, role } = useShilp();
   const t = useT();
   const navigate = useNavigate();
+  const isBuyer = role === "buyer" || role === "org";
 
-  const rows = [
-    { Icon: Package, label: t("profile.products"), to: "/catalog" as const },
-    { Icon: MessageSquare, label: t("profile.orders"), to: "/orders" as const },
-    { Icon: Globe, label: t("profile.language"), to: "/language" as const },
-  ];
+  const rows = isBuyer
+    ? [
+        { Icon: Store, label: t("nav.explore"), to: "/market" as const },
+        { Icon: MessageSquare, label: t("nav.inquiries"), to: "/orders" as const },
+        { Icon: Globe, label: t("profile.language"), to: "/language" as const },
+      ]
+    : [
+        { Icon: Package, label: t("profile.products"), to: "/catalog" as const },
+        { Icon: MessageSquare, label: t("profile.orders"), to: "/orders" as const },
+        { Icon: Globe, label: t("profile.language"), to: "/language" as const },
+      ];
+
+  const line = [
+    profile.craft || (isBuyer ? t("role.buyer") : t("role.artisan")),
+    isBuyer
+      ? `${sentInquiries.length} ${t("profile.sent")}`
+      : `${myProducts.length} ${t("profile.listed")}`,
+  ].join(" · ");
 
   return (
     <div className="flex min-h-full flex-1 flex-col bg-ivory">
@@ -51,17 +67,28 @@ function ProfileScreen() {
         <div className="flex items-center gap-4 rounded-3xl bg-white p-4 ring-1 ring-charcoal/8">
           <img
             src={artisanImg}
-            alt="Artisan portrait"
+            alt=""
             loading="lazy"
             className="h-20 w-20 shrink-0 rounded-2xl object-cover"
           />
-          <div className="min-w-0">
-            <p className="truncate text-xl font-extrabold">{artisanName} Devi</p>
-            <p className="text-sm opacity-65">Kutch, Gujarat</p>
-            <p className="mt-1 text-xs font-bold text-terracotta">
-              Pottery · {products.length} {t("profile.listed")}
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xl font-extrabold">
+              {profile.name || t("profile.noName")}
             </p>
+            <p className="truncate text-sm opacity-65">
+              {[profile.location, profile.age ? `${profile.age} ${t("profile.years")}` : ""]
+                .filter(Boolean)
+                .join(" · ") || t("profile.addDetails")}
+            </p>
+            <p className="mt-1 truncate text-xs font-bold text-terracotta">{line}</p>
           </div>
+          <button
+            aria-label={t("profile.edit")}
+            onClick={() => navigate({ to: "/setup" })}
+            className="press grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-sand text-forest"
+          >
+            <Pencil size={16} />
+          </button>
         </div>
       </div>
 
