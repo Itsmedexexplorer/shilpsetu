@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Copy, Handshake, QrCode, Share2 } from "lucide-react";
+import { ArrowLeft, Copy, Handshake, Package, QrCode, Share2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import demoAfter from "@/assets/vase-after.jpg";

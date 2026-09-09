@@ -127,6 +127,21 @@ function InquiryScreen() {
           value={form.offer}
           onChange={(e) => setForm({ ...form, offer: e.target.value })}
         />
+        <div
+          className={`rounded-3xl border-2 p-4 transition-colors ${
+            form.offer.replace(/[^\d]/g, "")
+              ? "border-saffron bg-saffron/15"
+              : "border-dashed border-charcoal/15 bg-white"
+          }`}
+        >
+          <p className="text-sm font-extrabold">✦ {t("coach.title")}</p>
+          <p className="mt-1 text-xs opacity-70">
+            {form.offer.replace(/[^\d]/g, "")
+              ? t("inquiry.coachReady")
+              : t("inquiry.coachLocked")}
+          </p>
+        </div>
+
 
         <AreaField
           label="Message"
