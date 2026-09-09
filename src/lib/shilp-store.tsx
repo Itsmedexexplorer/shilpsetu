@@ -85,7 +85,16 @@ export type Inquiry = {
   /** Final price both sides settled on. */
   agreedPrice: string;
   offers: Offer[];
+  /** A single buyer request, or an organisation's bulk order. */
+  kind: "single" | "bulk";
+  /** Organisation placing the bulk order. */
+  orgName: string;
+  /** When the organisation needs delivery. */
+  deadline: string;
+  /** Where the order must be delivered. */
+  deliverTo: string;
 };
+
 
 
 export const emptyDraft: Draft = {
@@ -160,8 +169,15 @@ type Ctx = Session &
         | "productId"
         | "quantity"
         | "message"
-      > & { offerPrice?: string },
+      > & {
+        offerPrice?: string;
+        kind?: Inquiry["kind"];
+        orgName?: string;
+        deadline?: string;
+        deliverTo?: string;
+      },
     ) => string;
+
 
     setInquiryStatus: (id: string, status: Inquiry["status"]) => void;
     /** Put a new price on the table from either side. */
@@ -201,7 +217,12 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
           offerPrice: i.offerPrice ?? "",
           agreedPrice: i.agreedPrice ?? "",
           offers: Array.isArray(i.offers) ? i.offers : [],
+          kind: i.kind ?? "single",
+          orgName: i.orgName ?? "",
+          deadline: i.deadline ?? "",
+          deliverTo: i.deliverTo ?? "",
         }));
+
         setMarket(parsedMarket);
       }
     } catch {
@@ -294,7 +315,12 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
                 status: offerPrice ? "negotiating" : "new",
                 offerPrice,
                 agreedPrice: "",
+                kind: i.kind ?? "single",
+                orgName: i.orgName ?? "",
+                deadline: i.deadline ?? "",
+                deliverTo: i.deliverTo ?? "",
                 offers: offerPrice
+
                   ? [
                       {
                         by: "buyer" as const,

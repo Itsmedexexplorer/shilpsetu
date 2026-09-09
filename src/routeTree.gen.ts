@@ -30,6 +30,7 @@ import { Route as RoleRouteImport } from './routes/role'
 import { Route as SetupRouteImport } from './routes/setup'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as VoiceRouteImport } from './routes/voice'
+import { Route as BulkIdRouteImport } from './routes/bulk.$id'
 import { Route as InquiryIdRouteImport } from './routes/inquiry.$id'
 import { Route as NegotiateIdRouteImport } from './routes/negotiate.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
@@ -139,6 +140,11 @@ const VoiceRoute = VoiceRouteImport.update({
   path: '/voice',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BulkIdRoute = BulkIdRouteImport.update({
+  id: '/bulk/$id',
+  path: '/bulk/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InquiryIdRoute = InquiryIdRouteImport.update({
   id: '/inquiry/$id',
   path: '/inquiry/$id',
@@ -177,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/setup': typeof SetupRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
+  '/bulk/$id': typeof BulkIdRoute
   '/inquiry/$id': typeof InquiryIdRoute
   '/negotiate/$id': typeof NegotiateIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -203,6 +210,7 @@ export interface FileRoutesByTo {
   '/setup': typeof SetupRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
+  '/bulk/$id': typeof BulkIdRoute
   '/inquiry/$id': typeof InquiryIdRoute
   '/negotiate/$id': typeof NegotiateIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/setup': typeof SetupRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
+  '/bulk/$id': typeof BulkIdRoute
   '/inquiry/$id': typeof InquiryIdRoute
   '/negotiate/$id': typeof NegotiateIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -258,6 +267,7 @@ export interface FileRouteTypes {
     | '/setup'
     | '/studio'
     | '/voice'
+    | '/bulk/$id'
     | '/inquiry/$id'
     | '/negotiate/$id'
     | '/product/$id'
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
     | '/setup'
     | '/studio'
     | '/voice'
+    | '/bulk/$id'
     | '/inquiry/$id'
     | '/negotiate/$id'
     | '/product/$id'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/setup'
     | '/studio'
     | '/voice'
+    | '/bulk/$id'
     | '/inquiry/$id'
     | '/negotiate/$id'
     | '/product/$id'
@@ -337,6 +349,7 @@ export interface RootRouteChildren {
   SetupRoute: typeof SetupRoute
   StudioRoute: typeof StudioRoute
   VoiceRoute: typeof VoiceRoute
+  BulkIdRoute: typeof BulkIdRoute
   InquiryIdRoute: typeof InquiryIdRoute
   NegotiateIdRoute: typeof NegotiateIdRoute
   ProductIdRoute: typeof ProductIdRoute
@@ -491,6 +504,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VoiceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bulk/$id': {
+      id: '/bulk/$id'
+      path: '/bulk/$id'
+      fullPath: '/bulk/$id'
+      preLoaderRoute: typeof BulkIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inquiry/$id': {
       id: '/inquiry/$id'
       path: '/inquiry/$id'
@@ -537,6 +557,7 @@ const rootRouteChildren: RootRouteChildren = {
   SetupRoute: SetupRoute,
   StudioRoute: StudioRoute,
   VoiceRoute: VoiceRoute,
+  BulkIdRoute: BulkIdRoute,
   InquiryIdRoute: InquiryIdRoute,
   NegotiateIdRoute: NegotiateIdRoute,
   ProductIdRoute: ProductIdRoute,
