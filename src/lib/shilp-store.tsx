@@ -346,6 +346,7 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
     return {
       ...session,
       ...market,
+      accounts,
       ready,
       artisanName: session.profile.name || "Friend",
       myProducts,
