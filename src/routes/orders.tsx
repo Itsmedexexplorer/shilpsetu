@@ -88,7 +88,7 @@ function OrdersScreen() {
                 )}
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-lg font-extrabold">
-                    {isBuyer ? i.productTitle : i.buyer}
+                    {isBuyer ? i.productTitle : i.orgName || i.buyer}
                   </p>
                   <p className="truncate text-sm opacity-65">
                     {isBuyer
@@ -98,11 +98,33 @@ function OrdersScreen() {
                 </div>
                 <span className="shrink-0 text-xs font-bold opacity-55">{i.date}</span>
               </div>
+              {i.kind === "bulk" ? (
+                <div className="mt-3 flex items-center justify-between rounded-2xl bg-forest px-4 py-3 text-ivory">
+                  <span className="text-xs font-bold tracking-[0.12em] uppercase opacity-70">
+                    {t("orders.bulk")} · {i.quantity} ×{" "}
+                    {rupees(i.agreedPrice || i.offerPrice || i.productPrice)}
+                  </span>
+                  <span className="font-display text-xl font-extrabold">
+                    {rupees(
+                      (Number(i.quantity) || 0) *
+                        (Number(i.agreedPrice || i.offerPrice || i.productPrice) || 0),
+                    )}
+                  </span>
+                </div>
+              ) : null}
               <div className="mt-3 flex flex-wrap gap-2 text-xs font-bold">
                 <span className="rounded-full bg-sand px-3 py-1">
                   {t("orders.qty")} {i.quantity}
                 </span>
                 <span className="rounded-full bg-sand px-3 py-1">{i.contact}</span>
+                {i.deadline ? (
+                  <span className="rounded-full bg-sand px-3 py-1">
+                    {t("orders.by")} {i.deadline}
+                  </span>
+                ) : null}
+                {i.deliverTo ? (
+                  <span className="rounded-full bg-sand px-3 py-1">{i.deliverTo}</span>
+                ) : null}
                 {i.productPrice ? (
                   <span className="rounded-full bg-terracotta/10 px-3 py-1 text-terracotta">
                     {rupees(i.productPrice)}
@@ -121,6 +143,7 @@ function OrdersScreen() {
                   {t(`orders.${i.status}`)}
                 </span>
               </div>
+
               {i.message ? (
                 <p className="mt-3 text-sm opacity-75">{i.message}</p>
               ) : null}
