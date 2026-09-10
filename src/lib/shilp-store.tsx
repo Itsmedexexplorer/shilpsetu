@@ -405,50 +405,44 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
           seller: { ...session.profile },
         };
         setMarket((m) => ({ ...m, products: [product, ...m.products] }));
+        void saveProduct(product);
         return product;
       },
       addInquiry: (i) => {
         const id = `i${Date.now()}`;
-        setMarket((m) => {
-          const product = m.products.find((p) => p.id === i.productId);
-          const offerPrice = (i.offerPrice ?? "").replace(/[^\d]/g, "");
-          return {
-            ...m,
-            inquiries: [
-              {
-                ...i,
-                sellerName: product?.seller?.name ?? "",
-                productTitle: product?.title ?? "Product",
-                productImage: product?.image ?? "",
-                productPrice: product?.price ?? "0",
-                id,
-                date: new Date().toLocaleDateString("en-IN", {
-                  day: "2-digit",
-                  month: "short",
-                }),
-                status: offerPrice ? "negotiating" : "new",
-                offerPrice,
-                agreedPrice: "",
-                kind: i.kind ?? "single",
-                orgName: i.orgName ?? "",
-                deadline: i.deadline ?? "",
-                deliverTo: i.deliverTo ?? "",
-                offers: offerPrice
-
-                  ? [
-                      {
-                        by: "buyer" as const,
-                        price: offerPrice,
-                        note: i.message,
-                        at: Date.now(),
-                      },
-                    ]
-                  : [],
-              },
-              ...m.inquiries,
-            ],
-          };
-        });
+        const product = market.products.find((p) => p.id === i.productId);
+        const offerPrice = (i.offerPrice ?? "").replace(/[^\d]/g, "");
+        const inquiry: Inquiry = {
+          ...i,
+          sellerName: product?.seller?.name ?? "",
+          productTitle: product?.title ?? "Product",
+          productImage: product?.image ?? "",
+          productPrice: product?.price ?? "0",
+          id,
+          date: new Date().toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+          }),
+          status: offerPrice ? "negotiating" : "new",
+          offerPrice,
+          agreedPrice: "",
+          kind: i.kind ?? "single",
+          orgName: i.orgName ?? "",
+          deadline: i.deadline ?? "",
+          deliverTo: i.deliverTo ?? "",
+          offers: offerPrice
+            ? [
+                {
+                  by: "buyer" as const,
+                  price: offerPrice,
+                  note: i.message,
+                  at: Date.now(),
+                },
+              ]
+            : [],
+        };
+        setMarket((m) => ({ ...m, inquiries: [inquiry, ...m.inquiries] }));
+        void saveInquiry(inquiry);
         return id;
       },
       signOut: () => {
