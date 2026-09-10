@@ -219,17 +219,23 @@ export function ErrorNote({
   );
 }
 
-export function StatusChip({ status }: { status: "published" | "draft" }) {
+export function StatusChip({
+  status,
+}: {
+  status: "published" | "draft" | "soldout";
+}) {
   return (
     <span
       className={cn(
         "rounded-full px-2.5 py-1 text-[0.68rem] font-extrabold tracking-wide uppercase",
         status === "published"
           ? "bg-forest text-ivory"
-          : "bg-sand text-charcoal/70 ring-1 ring-charcoal/10",
+          : status === "soldout"
+            ? "bg-terracotta text-white"
+            : "bg-sand text-charcoal/70 ring-1 ring-charcoal/10",
       )}
     >
-      {status}
+      {status === "soldout" ? "Out of stock" : status}
     </span>
   );
 }
