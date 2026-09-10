@@ -6,6 +6,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import {
+  fetchMarket,
+  patchInquiry,
+  saveInquiry,
+  saveProduct,
+  subscribeMarket,
+} from "@/lib/market-sync";
 
 export type LangCode = "hi" | "en" | "kn" | "ta" | "te";
 export type Role = "artisan" | "buyer" | "org";
@@ -298,6 +305,24 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
     setReady(true);
   }, []);
 
+  // Everything listed or asked for lives online, so every phone sees the same market.
+  useEffect(() => {
+    let alive = true;
+    const pull = async () => {
+      const remote = await fetchMarket();
+      if (alive && remote) setMarket(remote);
+    };
+    void pull();
+    const unsubscribe = subscribeMarket(() => void pull());
+    const onFocus = () => void pull();
+    window.addEventListener("focus", onFocus);
+    return () => {
+      alive = false;
+      unsubscribe();
+      window.removeEventListener("focus", onFocus);
+    };
+  }, []);
+
   useEffect(() => {
     if (!ready) return;
     try {
@@ -380,50 +405,44 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
           seller: { ...session.profile },
         };
         setMarket((m) => ({ ...m, products: [product, ...m.products] }));
+        void saveProduct(product);
         return product;
       },
       addInquiry: (i) => {
         const id = `i${Date.now()}`;
-        setMarket((m) => {
-          const product = m.products.find((p) => p.id === i.productId);
-          const offerPrice = (i.offerPrice ?? "").replace(/[^\d]/g, "");
-          return {
-            ...m,
-            inquiries: [
-              {
-                ...i,
-                sellerName: product?.seller?.name ?? "",
-                productTitle: product?.title ?? "Product",
-                productImage: product?.image ?? "",
-                productPrice: product?.price ?? "0",
-                id,
-                date: new Date().toLocaleDateString("en-IN", {
-                  day: "2-digit",
-                  month: "short",
-                }),
-                status: offerPrice ? "negotiating" : "new",
-                offerPrice,
-                agreedPrice: "",
-                kind: i.kind ?? "single",
-                orgName: i.orgName ?? "",
-                deadline: i.deadline ?? "",
-                deliverTo: i.deliverTo ?? "",
-                offers: offerPrice
-
-                  ? [
-                      {
-                        by: "buyer" as const,
-                        price: offerPrice,
-                        note: i.message,
-                        at: Date.now(),
-                      },
-                    ]
-                  : [],
-              },
-              ...m.inquiries,
-            ],
-          };
-        });
+        const product = market.products.find((p) => p.id === i.productId);
+        const offerPrice = (i.offerPrice ?? "").replace(/[^\d]/g, "");
+        const inquiry: Inquiry = {
+          ...i,
+          sellerName: product?.seller?.name ?? "",
+          productTitle: product?.title ?? "Product",
+          productImage: product?.image ?? "",
+          productPrice: product?.price ?? "0",
+          id,
+          date: new Date().toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+          }),
+          status: offerPrice ? "negotiating" : "new",
+          offerPrice,
+          agreedPrice: "",
+          kind: i.kind ?? "single",
+          orgName: i.orgName ?? "",
+          deadline: i.deadline ?? "",
+          deliverTo: i.deliverTo ?? "",
+          offers: offerPrice
+            ? [
+                {
+                  by: "buyer" as const,
+                  price: offerPrice,
+                  note: i.message,
+                  at: Date.now(),
+                },
+              ]
+            : [],
+        };
+        setMarket((m) => ({ ...m, inquiries: [inquiry, ...m.inquiries] }));
+        void saveInquiry(inquiry);
         return id;
       },
       signOut: () => {
@@ -484,26 +503,27 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
           s.accountId === id ? { ...initialSession, language: s.language } : s,
         );
       },
-      setInquiryStatus: (id, status) =>
+      setInquiryStatus: (id, status) => {
         setMarket((m) => ({
           ...m,
           inquiries: m.inquiries.map((x) => (x.id === id ? { ...x, status } : x)),
-        })),
-      addOffer: (id, offer) =>
+        }));
+        void patchInquiry(id, { status });
+      },
+      addOffer: (id, offer) => {
+        const current = market.inquiries.find((x) => x.id === id);
+        const offers = [...(current?.offers ?? []), { ...offer, at: Date.now() }];
+        const status: Inquiry["status"] =
+          current?.status === "accepted" ? "accepted" : "negotiating";
         setMarket((m) => ({
           ...m,
           inquiries: m.inquiries.map((x) =>
-            x.id === id
-              ? {
-                  ...x,
-                  offerPrice: offer.price,
-                  status: x.status === "accepted" ? x.status : "negotiating",
-                  offers: [...(x.offers ?? []), { ...offer, at: Date.now() }],
-                }
-              : x,
+            x.id === id ? { ...x, offerPrice: offer.price, status, offers } : x,
           ),
-        })),
-      acceptOffer: (id, price) =>
+        }));
+        void patchInquiry(id, { offerPrice: offer.price, status, offers });
+      },
+      acceptOffer: (id, price) => {
         setMarket((m) => ({
           ...m,
           inquiries: m.inquiries.map((x) =>
@@ -511,7 +531,13 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
               ? { ...x, agreedPrice: price, offerPrice: price, status: "accepted" }
               : x,
           ),
-        })),
+        }));
+        void patchInquiry(id, {
+          agreedPrice: price,
+          offerPrice: price,
+          status: "accepted",
+        });
+      },
     };
   }, [session, market, accounts, ready]);
 
