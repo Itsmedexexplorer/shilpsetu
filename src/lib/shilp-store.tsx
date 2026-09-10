@@ -6,6 +6,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import {
+  fetchMarket,
+  patchInquiry,
+  saveInquiry,
+  saveProduct,
+  subscribeMarket,
+} from "@/lib/market-sync";
 
 export type LangCode = "hi" | "en" | "kn" | "ta" | "te";
 export type Role = "artisan" | "buyer" | "org";
