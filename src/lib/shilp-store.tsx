@@ -503,26 +503,27 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
           s.accountId === id ? { ...initialSession, language: s.language } : s,
         );
       },
-      setInquiryStatus: (id, status) =>
+      setInquiryStatus: (id, status) => {
         setMarket((m) => ({
           ...m,
           inquiries: m.inquiries.map((x) => (x.id === id ? { ...x, status } : x)),
-        })),
-      addOffer: (id, offer) =>
+        }));
+        void patchInquiry(id, { status });
+      },
+      addOffer: (id, offer) => {
+        const current = market.inquiries.find((x) => x.id === id);
+        const offers = [...(current?.offers ?? []), { ...offer, at: Date.now() }];
+        const status: Inquiry["status"] =
+          current?.status === "accepted" ? "accepted" : "negotiating";
         setMarket((m) => ({
           ...m,
           inquiries: m.inquiries.map((x) =>
-            x.id === id
-              ? {
-                  ...x,
-                  offerPrice: offer.price,
-                  status: x.status === "accepted" ? x.status : "negotiating",
-                  offers: [...(x.offers ?? []), { ...offer, at: Date.now() }],
-                }
-              : x,
+            x.id === id ? { ...x, offerPrice: offer.price, status, offers } : x,
           ),
-        })),
-      acceptOffer: (id, price) =>
+        }));
+        void patchInquiry(id, { offerPrice: offer.price, status, offers });
+      },
+      acceptOffer: (id, price) => {
         setMarket((m) => ({
           ...m,
           inquiries: m.inquiries.map((x) =>
@@ -530,7 +531,13 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
               ? { ...x, agreedPrice: price, offerPrice: price, status: "accepted" }
               : x,
           ),
-        })),
+        }));
+        void patchInquiry(id, {
+          agreedPrice: price,
+          offerPrice: price,
+          status: "accepted",
+        });
+      },
     };
   }, [session, market, accounts, ready]);
 
