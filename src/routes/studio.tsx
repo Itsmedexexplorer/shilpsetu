@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Check, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
-import demoAfter from "@/assets/vase-after.jpg";
 import demoBefore from "@/assets/vase-before.jpg";
 import { AiBadge, Btn, ErrorNote, Screen, Title, TopBar } from "@/components/shilp/ui";
 import { useShilp } from "@/lib/shilp-store";
@@ -29,6 +28,25 @@ const steps = [
   "Optimizing framing",
 ];
 
+/** Turn any image (asset URL or data URL) into a data URL the AI can read. */
+async function toDataUrl(src: string, max = 1280): Promise<string> {
+  const img = document.createElement("img");
+  img.crossOrigin = "anonymous";
+  await new Promise<void>((resolve, reject) => {
+    img.onload = () => resolve();
+    img.onerror = () => reject(new Error("Could not read that photo"));
+    img.src = src;
+  });
+  const scale = Math.min(1, max / Math.max(img.width, img.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(img.width * scale);
+  canvas.height = Math.round(img.height * scale);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Could not read that photo");
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL("image/jpeg", 0.9);
+}
+
 function StudioScreen() {
   const { draft, patchDraft } = useShilp();
   const navigate = useNavigate();
@@ -36,21 +54,48 @@ function StudioScreen() {
   const [split, setSplit] = useState(50);
   const [failed, setFailed] = useState(false);
   const [run, setRun] = useState(0);
+  const [cleaned, setCleaned] = useState<string | null>(null);
 
   const before = draft.originalPhoto ?? demoBefore;
-  const isDemo = before === demoBefore;
-  const after = isDemo ? demoAfter : before;
+  const after = cleaned ?? before;
+
 
   useEffect(() => {
+    let alive = true;
     setDone(0);
     setFailed(false);
-    const timers = steps.map((_, i) =>
-      setTimeout(() => setDone(i + 1), 500 + i * 650),
+    setCleaned(null);
+    // Show the steps ticking along while the real work happens.
+    const timers = [0, 1, 2].map((i) =>
+      setTimeout(() => alive && setDone((d) => Math.max(d, i + 1)), 900 + i * 2200),
     );
-    return () => timers.forEach(clearTimeout);
-  }, [run]);
 
-  const finished = done >= steps.length;
+    (async () => {
+      try {
+        const source = await toDataUrl(before);
+        const res = await fetch("/api/enhance-photo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: source }),
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const json = (await res.json()) as { image?: string };
+        if (!json.image) throw new Error("No image");
+        if (!alive) return;
+        setCleaned(json.image);
+        setDone(steps.length);
+      } catch {
+        if (alive) setFailed(true);
+      }
+    })();
+
+    return () => {
+      alive = false;
+      timers.forEach(clearTimeout);
+    };
+  }, [run, before]);
+
+  const finished = done >= steps.length && !!cleaned;
 
   return (
     <Screen>
@@ -66,9 +111,7 @@ function StudioScreen() {
             alt="Enhanced product"
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover"
-            style={
-              isDemo ? undefined : { filter: "contrast(1.12) saturate(1.12) brightness(1.08)" }
-            }
+            style={cleaned ? undefined : { filter: "brightness(0.92)" }}
           />
           <div
             className="absolute inset-y-0 left-0 overflow-hidden"
