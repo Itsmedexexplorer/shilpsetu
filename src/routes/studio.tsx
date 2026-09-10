@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Check, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
-import demoAfter from "@/assets/vase-after.jpg";
 import demoBefore from "@/assets/vase-before.jpg";
 import { AiBadge, Btn, ErrorNote, Screen, Title, TopBar } from "@/components/shilp/ui";
 import { useShilp } from "@/lib/shilp-store";
@@ -59,7 +58,7 @@ function StudioScreen() {
 
   const before = draft.originalPhoto ?? demoBefore;
   const after = cleaned ?? before;
-  const isDemo = false;
+
 
   useEffect(() => {
     let alive = true;
@@ -112,9 +111,7 @@ function StudioScreen() {
             alt="Enhanced product"
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover"
-            style={
-              isDemo ? undefined : { filter: "contrast(1.12) saturate(1.12) brightness(1.08)" }
-            }
+            style={cleaned ? undefined : { filter: "brightness(0.92)" }}
           />
           <div
             className="absolute inset-y-0 left-0 overflow-hidden"
