@@ -57,6 +57,7 @@ function BuyerView() {
   }
 
   const url = productUrl(p.id);
+  const isMine = myProducts.some((x) => x.id === p.id);
 
   const copy = () => {
     navigator.clipboard?.writeText(url);
@@ -265,13 +266,15 @@ function BuyerView() {
             Contact Artisan
           </Btn>
         )}
-        <Btn
-          variant="forest"
-          icon={<Handshake size={20} />}
-          onClick={() => navigate({ to: "/inquiry/$id", params: { id: p.id } })}
-        >
-          {t("product.makeOffer")}
-        </Btn>
+        {!isMine && p.status !== "soldout" ? (
+          <Btn
+            variant="forest"
+            icon={<Handshake size={20} />}
+            onClick={() => navigate({ to: "/inquiry/$id", params: { id: p.id } })}
+          >
+            {t("product.makeOffer")}
+          </Btn>
+        ) : null}
       </div>
 
     </div>
