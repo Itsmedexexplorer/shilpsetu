@@ -102,7 +102,7 @@ const en: Dict = {
 
   "logout.title": "Log out?",
   "logout.body":
-    "Your language, products and inquiries are saved on this phone. Logging out clears them from this device.",
+    "Your listings and inquiries stay online and safe. Logging out only signs this phone out.",
   "logout.confirm": "Yes, log me out",
   "logout.stay": "Stay logged in",
   "logout.done": "You are logged out",
@@ -131,7 +131,7 @@ const en: Dict = {
   "market.anArtisan": "A SHILPSETU artisan",
   "market.emptyTitle": "No listings yet",
   "market.emptyBody":
-    "When an artisan publishes a craft on this device, it shows up here.",
+    "As soon as an artisan publishes a craft anywhere, it shows up here.",
   "market.filters": "Filters",
   "market.byCraft": "Craft",
   "market.byPlace": "Place",
