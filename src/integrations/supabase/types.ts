@@ -14,7 +14,129 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      inquiries: {
+        Row: {
+          agreed_price: string
+          buyer: string
+          buyer_avatar: string
+          buyer_location: string
+          contact: string
+          created_at: string
+          date: string
+          deadline: string
+          deliver_to: string
+          id: string
+          kind: string
+          message: string
+          offer_price: string
+          offers: Json
+          org_name: string
+          product_id: string
+          product_image: string
+          product_price: string
+          product_title: string
+          quantity: string
+          seller_name: string
+          status: string
+        }
+        Insert: {
+          agreed_price?: string
+          buyer?: string
+          buyer_avatar?: string
+          buyer_location?: string
+          contact?: string
+          created_at?: string
+          date?: string
+          deadline?: string
+          deliver_to?: string
+          id: string
+          kind?: string
+          message?: string
+          offer_price?: string
+          offers?: Json
+          org_name?: string
+          product_id?: string
+          product_image?: string
+          product_price?: string
+          product_title?: string
+          quantity?: string
+          seller_name?: string
+          status?: string
+        }
+        Update: {
+          agreed_price?: string
+          buyer?: string
+          buyer_avatar?: string
+          buyer_location?: string
+          contact?: string
+          created_at?: string
+          date?: string
+          deadline?: string
+          deliver_to?: string
+          id?: string
+          kind?: string
+          message?: string
+          offer_price?: string
+          offers?: Json
+          org_name?: string
+          product_id?: string
+          product_image?: string
+          product_price?: string
+          product_title?: string
+          quantity?: string
+          seller_name?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string
+          craft: string
+          created_at: string
+          created_at_ms: number
+          description: string
+          id: string
+          image: string
+          keywords: Json
+          material: string
+          price: string
+          seller: Json
+          status: string
+          title: string
+        }
+        Insert: {
+          category?: string
+          craft?: string
+          created_at?: string
+          created_at_ms?: number
+          description?: string
+          id: string
+          image?: string
+          keywords?: Json
+          material?: string
+          price?: string
+          seller?: Json
+          status?: string
+          title?: string
+        }
+        Update: {
+          category?: string
+          craft?: string
+          created_at?: string
+          created_at_ms?: number
+          description?: string
+          id?: string
+          image?: string
+          keywords?: Json
+          material?: string
+          price?: string
+          seller?: Json
+          status?: string
+          title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
