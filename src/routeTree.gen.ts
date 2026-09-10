@@ -31,6 +31,7 @@ import { Route as RoleRouteImport } from './routes/role'
 import { Route as SetupRouteImport } from './routes/setup'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as VoiceRouteImport } from './routes/voice'
+import { Route as ApiEnhancePhotoRouteImport } from './routes/api/enhance-photo'
 import { Route as BulkIdRouteImport } from './routes/bulk.$id'
 import { Route as InquiryIdRouteImport } from './routes/inquiry.$id'
 import { Route as NegotiateIdRouteImport } from './routes/negotiate.$id'
@@ -146,6 +147,11 @@ const VoiceRoute = VoiceRouteImport.update({
   path: '/voice',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiEnhancePhotoRoute = ApiEnhancePhotoRouteImport.update({
+  id: '/api/enhance-photo',
+  path: '/api/enhance-photo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BulkIdRoute = BulkIdRouteImport.update({
   id: '/bulk/$id',
   path: '/bulk/$id',
@@ -190,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/setup': typeof SetupRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
+  '/api/enhance-photo': typeof ApiEnhancePhotoRoute
   '/bulk/$id': typeof BulkIdRoute
   '/inquiry/$id': typeof InquiryIdRoute
   '/negotiate/$id': typeof NegotiateIdRoute
@@ -218,6 +225,7 @@ export interface FileRoutesByTo {
   '/setup': typeof SetupRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
+  '/api/enhance-photo': typeof ApiEnhancePhotoRoute
   '/bulk/$id': typeof BulkIdRoute
   '/inquiry/$id': typeof InquiryIdRoute
   '/negotiate/$id': typeof NegotiateIdRoute
@@ -247,6 +255,7 @@ export interface FileRoutesById {
   '/setup': typeof SetupRoute
   '/studio': typeof StudioRoute
   '/voice': typeof VoiceRoute
+  '/api/enhance-photo': typeof ApiEnhancePhotoRoute
   '/bulk/$id': typeof BulkIdRoute
   '/inquiry/$id': typeof InquiryIdRoute
   '/negotiate/$id': typeof NegotiateIdRoute
@@ -277,6 +286,7 @@ export interface FileRouteTypes {
     | '/setup'
     | '/studio'
     | '/voice'
+    | '/api/enhance-photo'
     | '/bulk/$id'
     | '/inquiry/$id'
     | '/negotiate/$id'
@@ -305,6 +315,7 @@ export interface FileRouteTypes {
     | '/setup'
     | '/studio'
     | '/voice'
+    | '/api/enhance-photo'
     | '/bulk/$id'
     | '/inquiry/$id'
     | '/negotiate/$id'
@@ -333,6 +344,7 @@ export interface FileRouteTypes {
     | '/setup'
     | '/studio'
     | '/voice'
+    | '/api/enhance-photo'
     | '/bulk/$id'
     | '/inquiry/$id'
     | '/negotiate/$id'
@@ -362,6 +374,7 @@ export interface RootRouteChildren {
   SetupRoute: typeof SetupRoute
   StudioRoute: typeof StudioRoute
   VoiceRoute: typeof VoiceRoute
+  ApiEnhancePhotoRoute: typeof ApiEnhancePhotoRoute
   BulkIdRoute: typeof BulkIdRoute
   InquiryIdRoute: typeof InquiryIdRoute
   NegotiateIdRoute: typeof NegotiateIdRoute
@@ -524,6 +537,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VoiceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/enhance-photo': {
+      id: '/api/enhance-photo'
+      path: '/api/enhance-photo'
+      fullPath: '/api/enhance-photo'
+      preLoaderRoute: typeof ApiEnhancePhotoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bulk/$id': {
       id: '/bulk/$id'
       path: '/bulk/$id'
@@ -578,6 +598,7 @@ const rootRouteChildren: RootRouteChildren = {
   SetupRoute: SetupRoute,
   StudioRoute: StudioRoute,
   VoiceRoute: VoiceRoute,
+  ApiEnhancePhotoRoute: ApiEnhancePhotoRoute,
   BulkIdRoute: BulkIdRoute,
   InquiryIdRoute: InquiryIdRoute,
   NegotiateIdRoute: NegotiateIdRoute,
