@@ -381,7 +381,9 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
       ready,
       artisanName: session.profile.name || "Friend",
       myProducts,
-      marketProducts: market.products.filter((p) => p.status === "published"),
+      marketProducts: market.products.filter(
+        (p) => p.status === "published" || p.status === "soldout",
+      ),
       receivedInquiries: market.inquiries.filter(
         (i) => !me || i.sellerName.trim().toLowerCase() === me,
       ),
@@ -508,6 +510,20 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
         setSession((s) =>
           s.accountId === id ? { ...initialSession, language: s.language } : s,
         );
+      },
+      setProductStatus: (id, status) => {
+        setMarket((m) => ({
+          ...m,
+          products: m.products.map((p) => (p.id === id ? { ...p, status } : p)),
+        }));
+        void patchProductStatus(id, status);
+      },
+      deleteProduct: (id) => {
+        setMarket((m) => ({
+          ...m,
+          products: m.products.filter((p) => p.id !== id),
+        }));
+        void deleteProductRemote(id);
       },
       setInquiryStatus: (id, status) => {
         setMarket((m) => ({
