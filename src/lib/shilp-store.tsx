@@ -298,6 +298,24 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
     setReady(true);
   }, []);
 
+  // Everything listed or asked for lives online, so every phone sees the same market.
+  useEffect(() => {
+    let alive = true;
+    const pull = async () => {
+      const remote = await fetchMarket();
+      if (alive && remote) setMarket(remote);
+    };
+    void pull();
+    const unsubscribe = subscribeMarket(() => void pull());
+    const onFocus = () => void pull();
+    window.addEventListener("focus", onFocus);
+    return () => {
+      alive = false;
+      unsubscribe();
+      window.removeEventListener("focus", onFocus);
+    };
+  }, []);
+
   useEffect(() => {
     if (!ready) return;
     try {
