@@ -7,8 +7,10 @@ import {
   type ReactNode,
 } from "react";
 import {
+  deleteProductRemote,
   fetchMarket,
   patchInquiry,
+  patchProductStatus,
   saveInquiry,
   saveProduct,
   subscribeMarket,
@@ -55,7 +57,7 @@ export type Product = {
   description: string;
   image: string;
   price: string;
-  status: "published" | "draft";
+  status: "published" | "draft" | "soldout";
   category: string;
   material: string;
   craft: string;
@@ -216,6 +218,10 @@ type Ctx = Session &
     patchDraft: (patch: Partial<Draft>) => void;
     resetDraft: () => void;
     publishDraft: (status?: Product["status"]) => Product;
+    /** Mark a listing available again or out of stock. */
+    setProductStatus: (id: string, status: Product["status"]) => void;
+    /** Remove a listing for good. */
+    deleteProduct: (id: string) => void;
     addInquiry: (
       i: Pick<
         Inquiry,
