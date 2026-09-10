@@ -7,8 +7,10 @@ import {
   type ReactNode,
 } from "react";
 import {
+  deleteProductRemote,
   fetchMarket,
   patchInquiry,
+  patchProductStatus,
   saveInquiry,
   saveProduct,
   subscribeMarket,
@@ -55,7 +57,7 @@ export type Product = {
   description: string;
   image: string;
   price: string;
-  status: "published" | "draft";
+  status: "published" | "draft" | "soldout";
   category: string;
   material: string;
   craft: string;
@@ -216,6 +218,10 @@ type Ctx = Session &
     patchDraft: (patch: Partial<Draft>) => void;
     resetDraft: () => void;
     publishDraft: (status?: Product["status"]) => Product;
+    /** Mark a listing available again or out of stock. */
+    setProductStatus: (id: string, status: Product["status"]) => void;
+    /** Remove a listing for good. */
+    deleteProduct: (id: string) => void;
     addInquiry: (
       i: Pick<
         Inquiry,
@@ -375,7 +381,9 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
       ready,
       artisanName: session.profile.name || "Friend",
       myProducts,
-      marketProducts: market.products.filter((p) => p.status === "published"),
+      marketProducts: market.products.filter(
+        (p) => p.status === "published" || p.status === "soldout",
+      ),
       receivedInquiries: market.inquiries.filter(
         (i) => !me || i.sellerName.trim().toLowerCase() === me,
       ),
@@ -502,6 +510,20 @@ export function ShilpProvider({ children }: { children: ReactNode }) {
         setSession((s) =>
           s.accountId === id ? { ...initialSession, language: s.language } : s,
         );
+      },
+      setProductStatus: (id, status) => {
+        setMarket((m) => ({
+          ...m,
+          products: m.products.map((p) => (p.id === id ? { ...p, status } : p)),
+        }));
+        void patchProductStatus(id, status);
+      },
+      deleteProduct: (id) => {
+        setMarket((m) => ({
+          ...m,
+          products: m.products.filter((p) => p.id !== id),
+        }));
+        void deleteProductRemote(id);
       },
       setInquiryStatus: (id, status) => {
         setMarket((m) => ({

@@ -1,5 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Copy, Handshake, Package, QrCode, Share2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Copy,
+  Handshake,
+  Package,
+  PackageX,
+  QrCode,
+  Share2,
+  Trash2,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import demoAfter from "@/assets/vase-after.jpg";
@@ -29,7 +38,7 @@ export const Route = createFileRoute("/product/$id")({
 
 function BuyerView() {
   const { id } = Route.useParams();
-  const { products, role } = useShilp();
+  const { products, role, myProducts, setProductStatus, deleteProduct } = useShilp();
   const t = useT();
   const navigate = useNavigate();
   const [qr, setQr] = useState(false);
@@ -48,6 +57,7 @@ function BuyerView() {
   }
 
   const url = productUrl(p.id);
+  const isMine = myProducts.some((x) => x.id === p.id);
 
   const copy = () => {
     navigator.clipboard?.writeText(url);
@@ -207,7 +217,44 @@ function BuyerView() {
       </div>
 
       <div className="sticky bottom-0 space-y-2 border-t border-charcoal/10 bg-white/95 px-6 pt-4 pb-6 backdrop-blur">
-        {role === "org" ? (
+        {isMine ? (
+          <>
+            <Btn
+              variant="forest"
+              icon={<PackageX size={20} />}
+              onClick={() => {
+                const next = p.status === "soldout" ? "published" : "soldout";
+                setProductStatus(p.id, next);
+                toast.success(
+                  next === "soldout"
+                    ? "Marked out of stock"
+                    : "Back in stock — buyers can order again",
+                );
+              }}
+            >
+              {p.status === "soldout" ? "Mark back in stock" : "Mark out of stock"}
+            </Btn>
+            <button
+              onClick={() => {
+                if (
+                  typeof window !== "undefined" &&
+                  !window.confirm("Delete this listing for everyone?")
+                )
+                  return;
+                deleteProduct(p.id);
+                toast.success("Listing deleted");
+                navigate({ to: "/catalog" });
+              }}
+              className="press flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-terracotta/40 py-3 font-extrabold text-terracotta"
+            >
+              <Trash2 size={18} /> Delete listing
+            </button>
+          </>
+        ) : p.status === "soldout" ? (
+          <p className="rounded-2xl bg-sand py-3 text-center font-extrabold text-charcoal/70">
+            Out of stock right now
+          </p>
+        ) : role === "org" ? (
           <Btn
             icon={<Package size={20} />}
             onClick={() => navigate({ to: "/bulk/$id", params: { id: p.id } })}
@@ -219,13 +266,15 @@ function BuyerView() {
             Contact Artisan
           </Btn>
         )}
-        <Btn
-          variant="forest"
-          icon={<Handshake size={20} />}
-          onClick={() => navigate({ to: "/inquiry/$id", params: { id: p.id } })}
-        >
-          {t("product.makeOffer")}
-        </Btn>
+        {!isMine && p.status !== "soldout" ? (
+          <Btn
+            variant="forest"
+            icon={<Handshake size={20} />}
+            onClick={() => navigate({ to: "/inquiry/$id", params: { id: p.id } })}
+          >
+            {t("product.makeOffer")}
+          </Btn>
+        ) : null}
       </div>
 
     </div>

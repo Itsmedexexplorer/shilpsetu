@@ -235,16 +235,23 @@ function MarketScreen() {
               style={{ animation: `rise-in .4s ${Math.min(i, 6) * 0.05}s both` }}
               className="lift press block overflow-hidden rounded-3xl bg-white ring-1 ring-charcoal/8"
             >
-              {p.image ? (
-                <img
-                  src={p.image}
-                  alt={p.title}
-                  loading="lazy"
-                  className="aspect-[16/10] w-full object-cover"
-                />
-              ) : (
-                <div className="aspect-[16/10] w-full bg-sand" />
-              )}
+              <div className="relative">
+                {p.image ? (
+                  <img
+                    src={p.image}
+                    alt={p.title}
+                    loading="lazy"
+                    className={`aspect-[16/10] w-full object-cover ${p.status === "soldout" ? "opacity-60" : ""}`}
+                  />
+                ) : (
+                  <div className="aspect-[16/10] w-full bg-sand" />
+                )}
+                {p.status === "soldout" ? (
+                  <span className="absolute top-3 left-3 rounded-full bg-terracotta px-3 py-1 text-[0.68rem] font-extrabold tracking-wide text-white uppercase">
+                    Out of stock
+                  </span>
+                ) : null}
+              </div>
               <div className="p-4">
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
                   <p className="truncate text-lg font-extrabold">{p.title}</p>

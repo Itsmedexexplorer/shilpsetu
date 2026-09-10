@@ -183,6 +183,16 @@ export async function patchInquiry(id: string, patch: Partial<Inquiry>) {
   await anyDb.from("inquiries").update(row).eq("id", id);
 }
 
+/** Flip a listing between available and out of stock. */
+export async function patchProductStatus(id: string, status: Product["status"]) {
+  await anyDb.from("products").update({ status }).eq("id", id);
+}
+
+/** Remove a listing everywhere. */
+export async function deleteProductRemote(id: string) {
+  await anyDb.from("products").delete().eq("id", id);
+}
+
 /** Call `onChange` whenever any phone adds or edits a listing or inquiry. */
 export function subscribeMarket(onChange: () => void) {
   const channel = anyDb

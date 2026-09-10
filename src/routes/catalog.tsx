@@ -21,11 +21,12 @@ export const Route = createFileRoute("/catalog")({
   component: CatalogScreen,
 });
 
-const filters = ["All", "Published", "Drafts"] as const;
+const filters = ["All", "Published", "Drafts", "Out of stock"] as const;
 const filterKey = {
   All: "catalog.all",
   Published: "catalog.published",
   Drafts: "catalog.drafts",
+  "Out of stock": "catalog.soldout",
 } as const;
 
 function CatalogScreen() {
@@ -39,7 +40,9 @@ function CatalogScreen() {
       ? true
       : filter === "Published"
         ? p.status === "published"
-        : p.status === "draft",
+        : filter === "Out of stock"
+          ? p.status === "soldout"
+          : p.status === "draft",
   );
 
   return (
