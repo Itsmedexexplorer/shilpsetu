@@ -16,7 +16,7 @@ import {
   subscribeMarket,
 } from "@/lib/market-sync";
 
-export type LangCode = "hi" | "en" | "kn" | "ta" | "te";
+export type LangCode = "hi" | "en" | "kn" | "ta" | "te" | "mr";
 export type Role = "artisan" | "buyer" | "org";
 
 export type Costs = {
