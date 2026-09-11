@@ -16,7 +16,7 @@ import {
   subscribeMarket,
 } from "@/lib/market-sync";
 
-export type LangCode = "hi" | "en" | "kn" | "ta" | "te";
+export type LangCode = "hi" | "en" | "kn" | "ta" | "te" | "mr";
 export type Role = "artisan" | "buyer" | "org";
 
 export type Costs = {
@@ -578,6 +578,7 @@ export const LANGUAGES: { code: LangCode; native: string; label: string }[] = [
   { code: "kn", native: "ಕನ್ನಡ", label: "Kannada" },
   { code: "ta", native: "தமிழ்", label: "Tamil" },
   { code: "te", native: "తెలుగు", label: "Telugu" },
+  { code: "mr", native: "मराठी", label: "Marathi" },
 ];
 
 export function rupees(v: string | number) {

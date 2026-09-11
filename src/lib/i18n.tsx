@@ -613,7 +613,46 @@ const te: Dict = {
   "product.makeOffer": "ధర ప్రతిపాదించండి",
 };
 
-const DICTS: Record<LangCode, Dict> = { en, hi, kn, ta, te };
+const mr: Dict = {
+  ...en,
+  "app.tagline": "६० सेकंदात कलेपासून बाजारापर्यंत.",
+  "app.line1": "तेच हात.",
+  "app.line2": "मोठा बाजार.",
+  "splash.badge": "भारतीय कारागिरांसाठी",
+  "splash.start": "ShilpSetu सुरू करा",
+  "splash.continue": "ShilpSetu पुढे चालू ठेवा",
+  "splash.language": "भाषा बदला",
+  "splash.step1": "फोटो काढा",
+  "splash.step2": "तुमच्या भाषेत बोला",
+  "splash.step3": "लिस्टिंग आणि योग्य किंमत",
+  "onboarding.title": "तुमच्या कलेला नवी संधी",
+  "common.continue": "पुढे चला",
+  "common.skip": "वगळा",
+  "common.seeAll": "सर्व पहा",
+  "lang.title": "तुमची भाषा निवडा",
+  "lang.sub": "संपूर्ण अ‍ॅप या भाषेत बदलेल.",
+  "role.title": "तुम्ही कोण आहात?",
+  "role.artisan": "कारागीर",
+  "role.buyer": "खरेदीदार",
+  "role.org": "संस्था",
+  "home.greet": "नमस्कार",
+  "home.sub": "आज तुमच्या कलेला संधी द्या.",
+  "home.add": "नवीन उत्पादन जोडा",
+  "home.catalog": "माझे कॅटलॉग",
+  "home.price": "किंमत सल्लागार",
+  "home.recent": "अलीकडील उत्पादने",
+  "nav.home": "होम",
+  "nav.catalog": "कॅटलॉग",
+  "nav.orders": "ऑर्डर",
+  "nav.profile": "प्रोफाइल",
+  "catalog.title": "माझे कॅटलॉग",
+  "orders.title": "चौकशी",
+  "profile.title": "माझे प्रोफाइल",
+  "coach.speak": "बोला",
+  "product.makeOffer": "किंमत सुचवा",
+};
+
+const DICTS: Record<LangCode, Dict> = { en, hi, kn, ta, te, mr };
 
 export function useT() {
   const { language } = useShilp();

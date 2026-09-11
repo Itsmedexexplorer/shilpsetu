@@ -57,7 +57,7 @@ function BuyerView() {
   }
 
   const url = productUrl(p.id);
-  const isMine = myProducts.some((x) => x.id === p.id);
+  const isMine = role === "artisan" && myProducts.some((x) => x.id === p.id);
 
   const copy = () => {
     navigator.clipboard?.writeText(url);
