@@ -578,6 +578,7 @@ export const LANGUAGES: { code: LangCode; native: string; label: string }[] = [
   { code: "kn", native: "ಕನ್ನಡ", label: "Kannada" },
   { code: "ta", native: "தமிழ்", label: "Tamil" },
   { code: "te", native: "తెలుగు", label: "Telugu" },
+  { code: "mr", native: "मराठी", label: "Marathi" },
 ];
 
 export function rupees(v: string | number) {
