@@ -21,6 +21,12 @@ export const Route = createFileRoute("/api/enhance-photo")({
             headers: { "Content-Type": "application/json" },
           });
         }
+        if (image.length > 8_000_000) {
+          return new Response(JSON.stringify({ error: "That photo is too large" }), {
+            status: 413,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
 
         const upstream = await fetch(GATEWAY, {
           method: "POST",

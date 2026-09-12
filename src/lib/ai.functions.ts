@@ -24,9 +24,9 @@ export const transcribeAudio = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) =>
     z
       .object({
-        audio: z.string().min(100),
-        mime: z.string().default("audio/webm"),
-        language: z.string().optional(),
+        audio: z.string().min(100).max(14_000_000),
+        mime: z.string().max(60).default("audio/webm"),
+        language: z.string().max(10).optional(),
       })
       .parse(input),
   )
@@ -76,9 +76,9 @@ export const analyzeProduct = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) =>
     z
       .object({
-        image: z.string().optional(),
-        transcript: z.string().default(""),
-        language: z.string().optional(),
+        image: z.string().max(8_000_000).optional(),
+        transcript: z.string().max(2000).default(""),
+        language: z.string().max(10).optional(),
       })
       .parse(input),
   )
@@ -178,18 +178,18 @@ export const negotiate = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) =>
     z
       .object({
-        title: z.string().default(""),
-        craft: z.string().default(""),
-        material: z.string().default(""),
-        listedPrice: z.string().default("0"),
-        buyerOffer: z.string().default("0"),
-        quantity: z.string().default("1"),
-        note: z.string().default(""),
-        costMaterial: z.string().default(""),
-        costLabour: z.string().default(""),
-        costOther: z.string().default(""),
-        days: z.string().default(""),
-        language: z.string().optional(),
+        title: z.string().max(80).default(""),
+        craft: z.string().max(60).default(""),
+        material: z.string().max(60).default(""),
+        listedPrice: z.string().max(12).default("0"),
+        buyerOffer: z.string().max(12).default("0"),
+        quantity: z.string().max(8).default("1"),
+        note: z.string().max(500).default(""),
+        costMaterial: z.string().max(12).default(""),
+        costLabour: z.string().max(12).default(""),
+        costOther: z.string().max(12).default(""),
+        days: z.string().max(40).default(""),
+        language: z.string().max(10).optional(),
         side: z.enum(["artisan", "buyer"]).default("artisan"),
       })
       .parse(input),
