@@ -38,17 +38,21 @@ function InquiryScreen() {
   const [sent, setSent] = useState(false);
   const [newId, setNewId] = useState<string | null>(null);
 
-  const valid = form.name.trim() && form.contact.trim();
+  const nameOk = form.name.trim().length > 1;
+  const contactOk = isContact(form.contact);
+  const qty = Math.min(Math.max(toAmount(form.qty, LIMITS.quantity), 1), 99999);
+  const valid = nameOk && contactOk;
 
   const send = () => {
+    if (!valid) return;
     const created = addInquiry({
       buyer: form.name.trim(),
       buyerAvatar: profile.avatar,
       buyerLocation: profile.location,
       contact: form.contact.trim(),
       productId: id,
-      quantity: form.qty || "1",
-      message: form.message,
+      quantity: String(qty),
+      message: form.message.trim(),
       offerPrice: form.offer,
     });
     setNewId(created);
