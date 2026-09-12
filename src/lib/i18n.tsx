@@ -436,8 +436,10 @@ const hi: Dict = {
   "product.makeOffer": "अपनी क़ीमत बताएँ",
   "inquiry.offerLabel": "आपकी क़ीमत (वैकल्पिक)",
   "inquiry.offerHint": "कोई क़ीमत लिखेंगे तो मोल-भाव शुरू हो जाएगा।",
-  "inquiry.coachReady": "भेजते ही AI कोच सही क़ीमत और जवाब तैयार कर देगा।",
-  "inquiry.coachLocked": "अपनी क़ीमत लिखिए, कोच खुल जाएगा।",
+  "inquiry.coachAfterReply":
+    "पहली क़ीमत आप खुद तय कीजिए। कारीगर का जवाब आते ही AI कोच सलाह देगा।",
+  "coach.firstMoveBody": "पहली क़ीमत आप खुद रखिए। सामने से जवाब आते ही कोच खुलेगा।",
+  "coach.waitingBody": "आपकी क़ीमत भेज दी गई है। जवाब आते ही कोच फिर मदद करेगा।",
   "orders.bulk": "थोक ऑर्डर",
   "orders.by": "तारीख़",
   "bulk.cta": "थोक ऑर्डर भेजें",
