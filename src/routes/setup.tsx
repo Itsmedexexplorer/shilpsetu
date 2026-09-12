@@ -4,6 +4,7 @@ import { Btn, Field, Screen, Title, TopBar } from "@/components/shilp/ui";
 
 import { useT } from "@/lib/i18n";
 import { useShilp } from "@/lib/shilp-store";
+import { isAge, LIMITS } from "@/lib/validate";
 
 export const Route = createFileRoute("/setup")({
   head: () => ({

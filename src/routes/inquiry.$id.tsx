@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AreaField, Btn, Field, Screen, Title, TopBar } from "@/components/shilp/ui";
 import { useT } from "@/lib/i18n";
 import { useShilp } from "@/lib/shilp-store";
+import { isContact, LIMITS, toAmount } from "@/lib/validate";
 
 export const Route = createFileRoute("/inquiry/$id")({
   head: () => ({
