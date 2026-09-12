@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AreaField, Btn, Field, Screen, Title, TopBar } from "@/components/shilp/ui";
 import { useT } from "@/lib/i18n";
 import { rupees, useShilp } from "@/lib/shilp-store";
+import { isContact, LIMITS, toAmount } from "@/lib/validate";
 
 export const Route = createFileRoute("/bulk/$id")({
   head: () => ({
@@ -44,10 +45,11 @@ function BulkScreen() {
   });
   const [newId, setNewId] = useState<string | null>(null);
 
-  const qty = Number(form.qty.replace(/[^\d]/g, "")) || 0;
-  const unit = Number(form.unit.replace(/[^\d]/g, "")) || Number(product?.price) || 0;
+  const qty = Math.min(toAmount(form.qty, LIMITS.quantity), 99999);
+  const unit = toAmount(form.unit) || toAmount(String(product?.price ?? ""));
   const total = qty * unit;
-  const valid = form.org.trim() && form.contact.trim() && qty > 0;
+  const contactOk = isContact(form.contact);
+  const valid = Boolean(form.org.trim()) && contactOk && qty > 0;
 
   const send = () => {
     const created = addInquiry({
