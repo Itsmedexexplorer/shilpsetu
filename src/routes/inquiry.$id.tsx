@@ -106,17 +106,24 @@ function InquiryScreen() {
       <div className="space-y-4 px-5">
         <Field
           label="Your name"
+          maxLength={LIMITS.name}
+          error={form.name && !nameOk ? "Please enter your full name." : null}
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
         <Field
           label="Phone / Email"
+          maxLength={LIMITS.contact}
+          error={
+            form.contact && !contactOk ? "Enter a valid phone number or email." : null
+          }
           value={form.contact}
           onChange={(e) => setForm({ ...form, contact: e.target.value })}
         />
         <Field
           label="Quantity"
           inputMode="numeric"
+          maxLength={LIMITS.quantity}
           value={form.qty}
           onChange={(e) => setForm({ ...form, qty: e.target.value })}
         />
@@ -124,6 +131,7 @@ function InquiryScreen() {
           label={t("inquiry.offerLabel")}
           hint={t("inquiry.offerHint")}
           inputMode="numeric"
+          maxLength={LIMITS.price}
           placeholder={product?.price ?? ""}
           value={form.offer}
           onChange={(e) => setForm({ ...form, offer: e.target.value })}
