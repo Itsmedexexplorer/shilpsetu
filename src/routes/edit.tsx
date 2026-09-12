@@ -106,7 +106,8 @@ function EditScreen() {
           <div className="mt-3 flex gap-2">
             <input
               value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
+              maxLength={LIMITS.tag}
+              onChange={(e) => setTagInput(cleanText(e.target.value, LIMITS.tag))}
               onKeyDown={(e) => e.key === "Enter" && addTag()}
               placeholder="Add a tag"
               className="h-12 flex-1 rounded-2xl border-2 border-charcoal/12 bg-white px-4 font-semibold outline-none focus:border-terracotta"
