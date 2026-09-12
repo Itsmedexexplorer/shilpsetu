@@ -132,8 +132,18 @@ export function BottomBar({ children }: { children: ReactNode }) {
 export function Field({
   label,
   hint,
+  error,
+  onChange,
+  maxLength,
+  inputMode,
   ...rest
-}: InputHTMLAttributes<HTMLInputElement> & { label: string; hint?: string }) {
+}: InputHTMLAttributes<HTMLInputElement> & {
+  label: string;
+  hint?: string;
+  error?: string | null;
+}) {
+  const numeric = inputMode === "numeric";
+  const cap = maxLength ?? (numeric ? LIMITS.price : LIMITS.name * 2);
   return (
     <label className="block">
       <span className="text-xs font-bold tracking-[0.12em] uppercase opacity-60">
@@ -141,9 +151,26 @@ export function Field({
       </span>
       <input
         {...rest}
-        className="mt-2 h-14 w-full rounded-2xl border-2 border-charcoal/12 bg-white px-4 text-base font-semibold outline-none focus:border-terracotta"
+        inputMode={inputMode}
+        maxLength={cap}
+        aria-invalid={error ? true : undefined}
+        onChange={(e) => {
+          const next = numeric
+            ? digitsOnly(e.target.value, cap)
+            : cleanText(e.target.value, cap);
+          if (next !== e.target.value) e.target.value = next;
+          onChange?.(e);
+        }}
+        className={cn(
+          "mt-2 h-14 w-full rounded-2xl border-2 bg-white px-4 text-base font-semibold outline-none focus:border-terracotta",
+          error ? "border-destructive/60" : "border-charcoal/12",
+        )}
       />
-      {hint ? <span className="mt-1 block text-xs opacity-55">{hint}</span> : null}
+      {error ? (
+        <span className="mt-1 block text-xs font-semibold text-destructive">{error}</span>
+      ) : hint ? (
+        <span className="mt-1 block text-xs opacity-55">{hint}</span>
+      ) : null}
     </label>
   );
 }
@@ -153,21 +180,27 @@ export function AreaField({
   value,
   onChange,
   rows = 5,
+  maxLength = LIMITS.message,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   rows?: number;
+  maxLength?: number;
 }) {
   return (
     <label className="block">
-      <span className="text-xs font-bold tracking-[0.12em] uppercase opacity-60">
+      <span className="flex items-center justify-between gap-2 text-xs font-bold tracking-[0.12em] uppercase opacity-60">
         {label}
+        <span className="tabular-nums">
+          {value.length}/{maxLength}
+        </span>
       </span>
       <textarea
         rows={rows}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        maxLength={maxLength}
+        onChange={(e) => onChange(cleanText(e.target.value, maxLength))}
         className="mt-2 w-full rounded-2xl border-2 border-charcoal/12 bg-white p-4 text-base leading-relaxed outline-none focus:border-terracotta"
       />
     </label>
