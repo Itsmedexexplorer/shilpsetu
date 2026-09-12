@@ -75,7 +75,7 @@ function CatalogScreen() {
       </header>
 
 
-      <div className="mt-5 space-y-4 px-5 pb-[calc(9rem+env(safe-area-inset-bottom))]">
+      <div className="mt-4 space-y-4 px-5 pb-[calc(9rem+env(safe-area-inset-bottom))]">
         {list.length === 0 ? (
           <Empty
             title={t("catalog.emptyTitle")}
