@@ -34,7 +34,7 @@ export function digitsOnly(value: string, maxDigits: number): string {
 }
 
 /** A whole number from a possibly messy string, clamped to a safe range. */
-export function toAmount(value: string, maxDigits = LIMITS.price): number {
+export function toAmount(value: string, maxDigits: number = LIMITS.price): number {
   const n = Number(digitsOnly(value, maxDigits));
   return Number.isFinite(n) ? n : 0;
 }
