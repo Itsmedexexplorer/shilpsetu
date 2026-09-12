@@ -246,7 +246,7 @@ function NegotiateScreen() {
               ))}
             </ul>
           </div>
-        ) : (
+        ) : coachUnlocked ? (
           <Btn
             variant="forest"
             onClick={ask}
@@ -261,6 +261,13 @@ function NegotiateScreen() {
           >
             {busy ? t("coach.thinking") : t("coach.cta")}
           </Btn>
+        ) : (
+          <div className="rounded-3xl border-2 border-dashed border-charcoal/15 bg-white p-4">
+            <p className="text-sm font-extrabold">✦ {t("coach.title")}</p>
+            <p className="mt-1 text-xs opacity-70">
+              {waitingForReply ? t("coach.waitingBody") : t("coach.firstMoveBody")}
+            </p>
+          </div>
         )}
 
         <Field
