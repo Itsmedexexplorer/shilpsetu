@@ -65,6 +65,7 @@ function CostsScreen() {
         <Field
           label="Production time (optional)"
           placeholder="e.g. 3 days"
+          maxLength={40}
           value={c.days}
           onChange={(e) => patchDraft({ costs: { ...c, days: e.target.value } })}
         />
