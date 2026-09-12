@@ -47,20 +47,24 @@ function CatalogScreen() {
 
   return (
     <div className="relative flex min-h-full flex-1 flex-col bg-ivory">
-      <header className="px-5 pt-8">
-        <Motif className="mb-4" />
-        <h1 className="text-[2.2rem] font-extrabold">{t("catalog.title")}</h1>
-        <p className="mt-1 text-sm opacity-65">
-          {products.length}{" "}
-          {products.length === 1 ? t("catalog.product") : t("catalog.products")}
-        </p>
+      <header className="px-5 pt-6">
+        <Motif className="mb-3" />
+        <div className="flex items-baseline justify-between gap-3">
+          <h1 className="truncate text-[1.7rem] leading-tight font-extrabold">
+            {t("catalog.title")}
+          </h1>
+          <p className="shrink-0 text-xs font-semibold opacity-55">
+            {products.length}{" "}
+            {products.length === 1 ? t("catalog.product") : t("catalog.products")}
+          </p>
+        </div>
 
-        <div className="mt-5 flex gap-2">
+        <div className="-mx-5 mt-4 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {filters.map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`press rounded-full px-4 py-2 text-sm font-bold ${
+              className={`press shrink-0 rounded-full px-4 py-2 text-sm font-bold whitespace-nowrap ${
                 filter === f ? "bg-forest text-ivory" : "bg-sand text-charcoal/70"
               }`}
             >
@@ -70,7 +74,8 @@ function CatalogScreen() {
         </div>
       </header>
 
-      <div className="mt-5 space-y-4 px-5 pb-[calc(9rem+env(safe-area-inset-bottom))]">
+
+      <div className="mt-4 space-y-4 px-5 pb-[calc(9rem+env(safe-area-inset-bottom))]">
         {list.length === 0 ? (
           <Empty
             title={t("catalog.emptyTitle")}
