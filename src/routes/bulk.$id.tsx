@@ -183,6 +183,7 @@ function BulkScreen() {
           label={t("bulk.unit")}
           hint={t("bulk.unitHint")}
           inputMode="numeric"
+          maxLength={LIMITS.price}
           placeholder={product?.price ?? ""}
           value={form.unit}
           onChange={(e) => setForm({ ...form, unit: e.target.value })}
@@ -202,12 +203,14 @@ function BulkScreen() {
         <Field
           label={t("bulk.deadline")}
           placeholder={t("bulk.deadlinePh")}
+          maxLength={LIMITS.shortText}
           value={form.deadline}
           onChange={(e) => setForm({ ...form, deadline: e.target.value })}
         />
         <Field
           label={t("bulk.deliverTo")}
           placeholder={t("bulk.deliverToPh")}
+          maxLength={LIMITS.location}
           value={form.deliverTo}
           onChange={(e) => setForm({ ...form, deliverTo: e.target.value })}
         />
