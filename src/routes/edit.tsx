@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { AreaField, Btn, Field, Screen, Title, TopBar } from "@/components/shilp/ui";
 import { useShilp } from "@/lib/shilp-store";
+import { cleanText, LIMITS } from "@/lib/validate";
 
 export const Route = createFileRoute("/edit")({
   head: () => ({
@@ -26,9 +27,17 @@ function EditScreen() {
   const [tagInput, setTagInput] = useState("");
 
   const addTag = () => {
-    const t = tagInput.trim();
-    if (!t) return;
-    patchDraft({ keywords: [...draft.keywords, t] });
+    const tag = cleanText(tagInput, LIMITS.tag).trim();
+    if (!tag) return;
+    if (draft.keywords.length >= 12) {
+      toast.error("You can add up to 12 tags.");
+      return;
+    }
+    if (draft.keywords.includes(tag)) {
+      setTagInput("");
+      return;
+    }
+    patchDraft({ keywords: [...draft.keywords, tag] });
     setTagInput("");
   };
 
@@ -42,6 +51,7 @@ function EditScreen() {
       <div className="space-y-5 px-5">
         <Field
           label="Title"
+          maxLength={LIMITS.title}
           value={draft.title}
           onChange={(e) => patchDraft({ title: e.target.value })}
         />
@@ -50,21 +60,25 @@ function EditScreen() {
           value={draft.description}
           onChange={(v) => patchDraft({ description: v })}
           rows={6}
+          maxLength={LIMITS.description}
         />
         <div className="grid grid-cols-2 gap-3">
           <Field
             label="Category"
+            maxLength={LIMITS.shortText}
             value={draft.category}
             onChange={(e) => patchDraft({ category: e.target.value })}
           />
           <Field
             label="Material"
+            maxLength={LIMITS.shortText}
             value={draft.material}
             onChange={(e) => patchDraft({ material: e.target.value })}
           />
         </div>
         <Field
           label="Craft type"
+          maxLength={LIMITS.craft}
           value={draft.craft}
           onChange={(e) => patchDraft({ craft: e.target.value })}
         />
@@ -92,7 +106,8 @@ function EditScreen() {
           <div className="mt-3 flex gap-2">
             <input
               value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
+              maxLength={LIMITS.tag}
+              onChange={(e) => setTagInput(cleanText(e.target.value, LIMITS.tag))}
               onKeyDown={(e) => e.key === "Enter" && addTag()}
               placeholder="Add a tag"
               className="h-12 flex-1 rounded-2xl border-2 border-charcoal/12 bg-white px-4 font-semibold outline-none focus:border-terracotta"

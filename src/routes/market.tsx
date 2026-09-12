@@ -122,7 +122,8 @@ function MarketScreen() {
             <Search size={18} className="shrink-0 opacity-50" />
             <input
               value={q}
-              onChange={(e) => setQ(e.target.value)}
+              maxLength={60}
+              onChange={(e) => setQ(e.target.value.slice(0, 60))}
               placeholder={t("market.search")}
               className="min-w-0 flex-1 bg-transparent py-2 text-base font-semibold outline-none"
             />

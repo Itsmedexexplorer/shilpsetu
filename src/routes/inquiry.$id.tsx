@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AreaField, Btn, Field, Screen, Title, TopBar } from "@/components/shilp/ui";
 import { useT } from "@/lib/i18n";
 import { useShilp } from "@/lib/shilp-store";
+import { isContact, LIMITS, toAmount } from "@/lib/validate";
 
 export const Route = createFileRoute("/inquiry/$id")({
   head: () => ({
@@ -37,17 +38,21 @@ function InquiryScreen() {
   const [sent, setSent] = useState(false);
   const [newId, setNewId] = useState<string | null>(null);
 
-  const valid = form.name.trim() && form.contact.trim();
+  const nameOk = form.name.trim().length > 1;
+  const contactOk = isContact(form.contact);
+  const qty = Math.min(Math.max(toAmount(form.qty, LIMITS.quantity), 1), 99999);
+  const valid = nameOk && contactOk;
 
   const send = () => {
+    if (!valid) return;
     const created = addInquiry({
       buyer: form.name.trim(),
       buyerAvatar: profile.avatar,
       buyerLocation: profile.location,
       contact: form.contact.trim(),
       productId: id,
-      quantity: form.qty || "1",
-      message: form.message,
+      quantity: String(qty),
+      message: form.message.trim(),
       offerPrice: form.offer,
     });
     setNewId(created);
@@ -101,17 +106,24 @@ function InquiryScreen() {
       <div className="space-y-4 px-5">
         <Field
           label="Your name"
+          maxLength={LIMITS.name}
+          error={form.name && !nameOk ? "Please enter your full name." : null}
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
         <Field
           label="Phone / Email"
+          maxLength={LIMITS.contact}
+          error={
+            form.contact && !contactOk ? "Enter a valid phone number or email." : null
+          }
           value={form.contact}
           onChange={(e) => setForm({ ...form, contact: e.target.value })}
         />
         <Field
           label="Quantity"
           inputMode="numeric"
+          maxLength={LIMITS.quantity}
           value={form.qty}
           onChange={(e) => setForm({ ...form, qty: e.target.value })}
         />
@@ -119,6 +131,7 @@ function InquiryScreen() {
           label={t("inquiry.offerLabel")}
           hint={t("inquiry.offerHint")}
           inputMode="numeric"
+          maxLength={LIMITS.price}
           placeholder={product?.price ?? ""}
           value={form.offer}
           onChange={(e) => setForm({ ...form, offer: e.target.value })}

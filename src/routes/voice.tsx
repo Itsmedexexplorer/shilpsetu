@@ -187,6 +187,7 @@ function VoiceScreen() {
             value={text}
             onChange={setText}
             rows={6}
+            maxLength={1200}
           />
         ) : (
           <button

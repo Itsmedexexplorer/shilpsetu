@@ -273,6 +273,7 @@ function NegotiateScreen() {
         <Field
           label={t("coach.yourPrice")}
           inputMode="numeric"
+          maxLength={7}
           placeholder={String(current)}
           value={price}
           onChange={(e) => setPrice(e.target.value)}
@@ -284,6 +285,7 @@ function NegotiateScreen() {
             value={note}
             onChange={setNote}
             rows={4}
+            maxLength={400}
           />
           <button
             onClick={voice.recording ? voice.stop : voice.start}

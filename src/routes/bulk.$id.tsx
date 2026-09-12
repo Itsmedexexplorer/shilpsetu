@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AreaField, Btn, Field, Screen, Title, TopBar } from "@/components/shilp/ui";
 import { useT } from "@/lib/i18n";
 import { rupees, useShilp } from "@/lib/shilp-store";
+import { isContact, LIMITS, toAmount } from "@/lib/validate";
 
 export const Route = createFileRoute("/bulk/$id")({
   head: () => ({
@@ -44,10 +45,11 @@ function BulkScreen() {
   });
   const [newId, setNewId] = useState<string | null>(null);
 
-  const qty = Number(form.qty.replace(/[^\d]/g, "")) || 0;
-  const unit = Number(form.unit.replace(/[^\d]/g, "")) || Number(product?.price) || 0;
+  const qty = Math.min(toAmount(form.qty, LIMITS.quantity), 99999);
+  const unit = toAmount(form.unit) || toAmount(String(product?.price ?? ""));
   const total = qty * unit;
-  const valid = form.org.trim() && form.contact.trim() && qty > 0;
+  const contactOk = isContact(form.contact);
+  const valid = Boolean(form.org.trim()) && contactOk && qty > 0;
 
   const send = () => {
     const created = addInquiry({
@@ -134,16 +136,22 @@ function BulkScreen() {
         <Field
           label={t("bulk.org")}
           placeholder={t("bulk.orgPh")}
+          maxLength={LIMITS.org}
           value={form.org}
           onChange={(e) => setForm({ ...form, org: e.target.value })}
         />
         <Field
           label={t("bulk.person")}
+          maxLength={LIMITS.name}
           value={form.person}
           onChange={(e) => setForm({ ...form, person: e.target.value })}
         />
         <Field
           label={t("bulk.contact")}
+          maxLength={LIMITS.contact}
+          error={
+            form.contact && !contactOk ? "Enter a valid phone number or email." : null
+          }
           value={form.contact}
           onChange={(e) => setForm({ ...form, contact: e.target.value })}
         />
@@ -152,6 +160,7 @@ function BulkScreen() {
           <Field
             label={t("bulk.qty")}
             inputMode="numeric"
+            maxLength={LIMITS.quantity}
             value={form.qty}
             onChange={(e) => setForm({ ...form, qty: e.target.value })}
           />
@@ -174,6 +183,7 @@ function BulkScreen() {
           label={t("bulk.unit")}
           hint={t("bulk.unitHint")}
           inputMode="numeric"
+          maxLength={LIMITS.price}
           placeholder={product?.price ?? ""}
           value={form.unit}
           onChange={(e) => setForm({ ...form, unit: e.target.value })}
@@ -193,12 +203,14 @@ function BulkScreen() {
         <Field
           label={t("bulk.deadline")}
           placeholder={t("bulk.deadlinePh")}
+          maxLength={LIMITS.shortText}
           value={form.deadline}
           onChange={(e) => setForm({ ...form, deadline: e.target.value })}
         />
         <Field
           label={t("bulk.deliverTo")}
           placeholder={t("bulk.deliverToPh")}
+          maxLength={LIMITS.location}
           value={form.deliverTo}
           onChange={(e) => setForm({ ...form, deliverTo: e.target.value })}
         />
