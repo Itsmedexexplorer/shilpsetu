@@ -51,6 +51,7 @@ function EditScreen() {
       <div className="space-y-5 px-5">
         <Field
           label="Title"
+          maxLength={LIMITS.title}
           value={draft.title}
           onChange={(e) => patchDraft({ title: e.target.value })}
         />
@@ -59,21 +60,25 @@ function EditScreen() {
           value={draft.description}
           onChange={(v) => patchDraft({ description: v })}
           rows={6}
+          maxLength={LIMITS.description}
         />
         <div className="grid grid-cols-2 gap-3">
           <Field
             label="Category"
+            maxLength={LIMITS.shortText}
             value={draft.category}
             onChange={(e) => patchDraft({ category: e.target.value })}
           />
           <Field
             label="Material"
+            maxLength={LIMITS.shortText}
             value={draft.material}
             onChange={(e) => patchDraft({ material: e.target.value })}
           />
         </div>
         <Field
           label="Craft type"
+          maxLength={LIMITS.craft}
           value={draft.craft}
           onChange={(e) => patchDraft({ craft: e.target.value })}
         />
