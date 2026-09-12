@@ -202,10 +202,13 @@ const en: Dict = {
   "orders.agreed": "Agreed",
   "product.makeOffer": "Make an offer",
   "inquiry.offerLabel": "Your price (optional)",
-  "inquiry.offerHint": "Add a price and the bargain coach opens up.",
-  "inquiry.coachReady":
-    "After you send, the AI coach opens with a fair price, a floor and a ready reply.",
-  "inquiry.coachLocked": "Type the price you want and the coach unlocks.",
+  "inquiry.offerHint": "Name the price you feel is fair — this first one is all yours.",
+  "inquiry.coachAfterReply":
+    "Make your own first offer. Once the artisan replies with their price, your coach opens with advice and a ready reply.",
+  "coach.firstMoveBody":
+    "Name your own price first. The coach opens once the other side replies.",
+  "coach.waitingBody":
+    "Your price is with them now. The coach opens again when they reply.",
 
   "orders.bulk": "Bulk order",
   "orders.by": "Needed by",
