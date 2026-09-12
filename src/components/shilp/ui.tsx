@@ -1,6 +1,7 @@
 import { useRouter } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
+import { cleanText, digitsOnly, LIMITS } from "@/lib/validate";
 import { cn } from "@/lib/utils";
 
 export function Screen({
