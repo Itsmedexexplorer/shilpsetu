@@ -136,16 +136,22 @@ function BulkScreen() {
         <Field
           label={t("bulk.org")}
           placeholder={t("bulk.orgPh")}
+          maxLength={LIMITS.org}
           value={form.org}
           onChange={(e) => setForm({ ...form, org: e.target.value })}
         />
         <Field
           label={t("bulk.person")}
+          maxLength={LIMITS.name}
           value={form.person}
           onChange={(e) => setForm({ ...form, person: e.target.value })}
         />
         <Field
           label={t("bulk.contact")}
+          maxLength={LIMITS.contact}
+          error={
+            form.contact && !contactOk ? "Enter a valid phone number or email." : null
+          }
           value={form.contact}
           onChange={(e) => setForm({ ...form, contact: e.target.value })}
         />
@@ -154,6 +160,7 @@ function BulkScreen() {
           <Field
             label={t("bulk.qty")}
             inputMode="numeric"
+            maxLength={LIMITS.quantity}
             value={form.qty}
             onChange={(e) => setForm({ ...form, qty: e.target.value })}
           />
