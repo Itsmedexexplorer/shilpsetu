@@ -319,9 +319,26 @@ Write verdict, reasons and replyText in ${langName}. Write numbers as plain digi
       const n = match ? match[0].replace(/,/g, "") : "";
       return n || fallback;
     };
+    const listedN = Number(digits(data.listedPrice, "0"));
+    const offerN = Number(digits(data.buyerOffer, "0"));
+    let counter = Number(digits(parsed.counterPrice, data.listedPrice || "0"));
+    let floor = Number(digits(parsed.floorPrice, data.buyerOffer || "0"));
+
+    // Guardrail: a counter that just repeats the asking price (or the buyer's
+    // own offer) is not a negotiation. Nudge it into the gap.
+    if (listedN > offerN && offerN > 0) {
+      const gap = listedN - offerN;
+      if (!Number.isFinite(counter) || counter >= listedN || counter <= offerN) {
+        counter = Math.round(offerN + gap * 0.65);
+      }
+      if (!Number.isFinite(floor) || floor <= 0 || floor > counter) {
+        floor = Math.round(offerN + gap * 0.3);
+      }
+    }
+
     return {
-      counterPrice: digits(parsed.counterPrice, data.listedPrice || "0"),
-      floorPrice: digits(parsed.floorPrice, data.buyerOffer || "0"),
+      counterPrice: String(counter || digits(parsed.counterPrice, data.listedPrice || "0")),
+      floorPrice: String(floor || digits(parsed.floorPrice, data.buyerOffer || "0")),
       verdict: parsed.verdict ?? "",
       reasons: Array.isArray(parsed.reasons) ? parsed.reasons.slice(0, 3) : [],
       replyText: parsed.replyText ?? "",
