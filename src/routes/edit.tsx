@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { AreaField, Btn, Field, Screen, Title, TopBar } from "@/components/shilp/ui";
 import { useShilp } from "@/lib/shilp-store";
+import { cleanText, LIMITS } from "@/lib/validate";
 
 export const Route = createFileRoute("/edit")({
   head: () => ({
@@ -26,9 +27,17 @@ function EditScreen() {
   const [tagInput, setTagInput] = useState("");
 
   const addTag = () => {
-    const t = tagInput.trim();
-    if (!t) return;
-    patchDraft({ keywords: [...draft.keywords, t] });
+    const tag = cleanText(tagInput, LIMITS.tag).trim();
+    if (!tag) return;
+    if (draft.keywords.length >= 12) {
+      toast.error("You can add up to 12 tags.");
+      return;
+    }
+    if (draft.keywords.includes(tag)) {
+      setTagInput("");
+      return;
+    }
+    patchDraft({ keywords: [...draft.keywords, tag] });
     setTagInput("");
   };
 
