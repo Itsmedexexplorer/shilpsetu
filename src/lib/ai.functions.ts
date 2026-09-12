@@ -214,6 +214,11 @@ Extra note from the person: "${data.note || "(none)"}"
 Advise the ${forArtisan ? "ARTISAN, who received this offer" : "BUYER, who is about to send this offer"}.
 Never advise a price below the artisan's real cost of materials plus labour. A small bulk discount is reasonable when quantity is more than 3.
 
+IMPORTANT negotiation rule: this is a real bargain, so you must MOVE. The counterPrice must be strictly BETWEEN the buyer's offer (${data.buyerOffer}) and the listed price (${data.listedPrice}) — never equal to the listed price and never equal to the buyer's offer. Typically give up 25-50% of the gap on the first counter: a good starting point is around ${Math.round(
+      Number(data.buyerOffer || 0) +
+        (Number(data.listedPrice || 0) - Number(data.buyerOffer || 0)) * 0.65,
+    )}. Only repeat the listed price if the buyer's offer is already at or above it.
+
 Return:
 - counterPrice: a single realistic per-piece number, digits only, no currency symbol.
 - floorPrice: the lowest per-piece number that still respects the artisan's cost, digits only.
