@@ -72,6 +72,15 @@ function NegotiateScreen() {
     );
   }
 
+  const mySide: "artisan" | "buyer" = isArtisan ? "artisan" : "buyer";
+  const offers = inquiry.offers ?? [];
+  const lastOffer = offers.length ? offers[offers.length - 1] : undefined;
+  const otherHasOffered = offers.some((o) => o.by !== mySide);
+  const waitingForReply = !!lastOffer && lastOffer.by === mySide;
+  // The buyer names their own first price; the coach only unlocks once the
+  // other side has put a price on the table and it is your turn to reply.
+  const coachUnlocked = otherHasOffered && !waitingForReply;
+
   const listed = inquiry.productPrice || product?.price || "0";
   const current = inquiry.offerPrice || listed;
   const gap = Math.max(0, Number(listed) - Number(current));
@@ -237,7 +246,7 @@ function NegotiateScreen() {
               ))}
             </ul>
           </div>
-        ) : (
+        ) : coachUnlocked ? (
           <Btn
             variant="forest"
             onClick={ask}
@@ -252,6 +261,13 @@ function NegotiateScreen() {
           >
             {busy ? t("coach.thinking") : t("coach.cta")}
           </Btn>
+        ) : (
+          <div className="rounded-3xl border-2 border-dashed border-charcoal/15 bg-white p-4">
+            <p className="text-sm font-extrabold">✦ {t("coach.title")}</p>
+            <p className="mt-1 text-xs opacity-70">
+              {waitingForReply ? t("coach.waitingBody") : t("coach.firstMoveBody")}
+            </p>
+          </div>
         )}
 
         <Field

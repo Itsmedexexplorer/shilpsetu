@@ -67,16 +67,12 @@ function InquiryScreen() {
           </p>
           <div className="mt-10 w-full space-y-2">
             {newId && form.offer.replace(/[^\d]/g, "") ? (
-              <Btn
-                onClick={() =>
-                  navigate({ to: "/negotiate/$id", params: { id: newId } })
-                }
-              >
-                {t("coach.title")}
-              </Btn>
+              <p className="mb-3 rounded-2xl bg-ivory/10 p-3 text-sm text-ivory/80">
+                {t("inquiry.coachAfterReply")}
+              </p>
             ) : null}
             <Btn
-              variant={newId && form.offer.replace(/[^\d]/g, "") ? "outline" : "primary"}
+              variant="primary"
               onClick={() => navigate({ to: "/orders" })}
             >
               See inquiries
@@ -135,11 +131,7 @@ function InquiryScreen() {
           }`}
         >
           <p className="text-sm font-extrabold">✦ {t("coach.title")}</p>
-          <p className="mt-1 text-xs opacity-70">
-            {form.offer.replace(/[^\d]/g, "")
-              ? t("inquiry.coachReady")
-              : t("inquiry.coachLocked")}
-          </p>
+          <p className="mt-1 text-xs opacity-70">{t("inquiry.coachAfterReply")}</p>
         </div>
 
 
