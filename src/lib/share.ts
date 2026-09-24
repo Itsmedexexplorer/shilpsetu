@@ -1,5 +1,5 @@
 /** Public, shareable base URL for buyer-facing links. */
-export const SITE_URL = "https://id-preview--b0f4092c-e806-47dc-b065-9cd6d471feb0.lovable.app";
+export const SITE_URL = "https://shilpsetu.lovable.app";
 
 function isPublicHost(host: string) {
   if (!host) return false;
